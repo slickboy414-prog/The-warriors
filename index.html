@@ -295,6 +295,28 @@ kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px soli
 #stage.tall .tb.k { right: 20px; left: auto; bottom: calc(40px + var(--cell)); }
 #stage.tall .tb.s { right: calc(20px + var(--cell)); left: auto; bottom: 40px; font-size: 22px; }
 #stage.tall .tb.g { right: calc(20px + 2 * var(--cell)); left: auto; bottom: calc(40px + 2 * var(--cell)); width: calc(var(--cell) - 10px); height: calc(var(--cell) - 10px); border-radius: 50%; font-size: 22px; }
+/* ---------- Local 2P touch controls ---------- */
+#touch2p { position: absolute; inset: 0; pointer-events: none; z-index: 8; }
+#touch2p .pad2 { position: absolute; bottom: 16px; display: flex; align-items: flex-end; gap: calc(var(--c2) * 0.3); }
+#touch2p .pad2.p1 { left: 16px; }
+#touch2p .pad2.p2 { right: 16px; }
+#touch2p .grp { display: grid; gap: 6px; }
+#touch2p .grp.move { grid-template-columns: repeat(2, var(--c2)); }
+#touch2p .grp.atk { grid-template-columns: repeat(3, var(--c2)); }
+#touch2p .pad2 .tb { position: static; width: var(--c2); height: var(--c2); border-radius: 16px; font-size: calc(var(--c2) * 0.2); letter-spacing: 0; }
+#touch2p .pad2.p1 .tb { border-color: rgba(0,240,255,.55); }
+#touch2p .pad2.p2 .tb { border-color: rgba(255,0,85,.6); }
+#touch2p .tb.blk { font-size: calc(var(--c2) * 0.17); }
+#touch2p .tb.pu { background: rgba(255,170,0,.35); } #touch2p .tb.ki { background: rgba(255,60,60,.35); } #touch2p .tb.bl { background: rgba(0,170,255,.35); }
+#touch2p .tb.sup, #touch2p .tb.rag { opacity: .35; }
+#touch2p .tb.sup.ready { opacity: 1; background: rgba(255,0,85,.55); border-color: #ffcc00; box-shadow: 0 0 16px #ffcc00; animation: lowpulse .35s infinite alternate; }
+#touch2p .tb.rag.ready { opacity: 1; background: rgba(255,30,30,.65); border-color: #ff9a9a; box-shadow: 0 0 16px #ff3b3b; animation: lowpulse .3s infinite alternate; }
+#touch2p .pad2-tag { position: absolute; top: calc(var(--c2) * -0.42); left: 0; font-size: calc(var(--c2) * 0.24); letter-spacing: 2px; text-shadow: 2px 2px 0 #000; }
+#touch2p .p1 .pad2-tag { color: #00f0ff; } #touch2p .p2 .pad2-tag { color: #ff0055; right: 0; left: auto; }
+#stage.tall #touch2p .pad2 { left: 50%; right: auto; transform: translateX(-50%); }
+#stage.tall #touch2p .pad2.p1 { bottom: 24px; }
+#stage.tall #touch2p .pad2.p2 { bottom: calc(24px + 2 * var(--c2) + 6px + 46px); }
+#stage.tall #tb-pause2 { top: calc(720px * var(--vz, 1) + 12px); left: 16px; right: auto; transform: none; width: 80px; height: 50px; }
 #stage.tall .tb.pause { top: calc(720px * var(--vz, 1) + 22px); width: 90px; height: 56px; font-size: 22px; }
 .tb.pause { right: 50%; transform: translateX(50%); top: 150px; bottom: auto; width: 64px; height: 44px; border-radius: 10px; font-size: 18px; }
 </style>
@@ -344,6 +366,32 @@ kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px soli
         <button class="tb x" data-k="KeyT" id="tb-super">SUPER</button>
         <button class="tb g" data-k="KeyR" id="tb-rage">RAGE</button>
         <button class="tb pause" id="tb-pause">II</button>
+    </div>
+    <!-- Local 2P touch controls: one full set per player -->
+    <div id="touch2p" class="hidden">
+        <div class="pad2 p1">
+            <div class="pad2-tag">P1</div>
+            <div class="grp move">
+                <button class="tb" data-k="KeyW" aria-label="P1 jump">&#9650;</button><button class="tb blk" data-k="KeyS" aria-label="P1 block">BLOCK</button>
+                <button class="tb" data-k="KeyA" aria-label="P1 left">&#9664;</button><button class="tb" data-k="KeyD" aria-label="P1 right">&#9654;</button>
+            </div>
+            <div class="grp atk">
+                <button class="tb sup" data-k="KeyT" id="tp1-super">SUPER</button><button class="tb rag" data-k="KeyR" id="tp1-rage">RAGE</button><button class="tb bl" data-k="KeyH">BLAST</button>
+                <button class="tb pu" data-k="KeyF">PUNCH</button><button class="tb ki" data-k="KeyG">KICK</button><span></span>
+            </div>
+        </div>
+        <div class="pad2 p2">
+            <div class="pad2-tag">P2</div>
+            <div class="grp move">
+                <button class="tb" data-k="ArrowUp" aria-label="P2 jump">&#9650;</button><button class="tb blk" data-k="ArrowDown" aria-label="P2 block">BLOCK</button>
+                <button class="tb" data-k="ArrowLeft" aria-label="P2 left">&#9664;</button><button class="tb" data-k="ArrowRight" aria-label="P2 right">&#9654;</button>
+            </div>
+            <div class="grp atk">
+                <button class="tb sup" data-k="KeyI" id="tp2-super">SUPER</button><button class="tb rag" data-k="KeyU" id="tp2-rage">RAGE</button><button class="tb bl" data-k="KeyL">BLAST</button>
+                <button class="tb pu" data-k="KeyJ">PUNCH</button><button class="tb ki" data-k="KeyK">KICK</button><span></span>
+            </div>
+        </div>
+        <button class="tb pause" id="tb-pause2" aria-label="Pause">II</button>
     </div>
 
     <!-- Main menu -->
@@ -407,7 +455,8 @@ kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px soli
             <b>P2:</b> [&larr;/&rarr;] Move &bull; [&uarr;] Jump &bull; [&darr;] Block &bull; [J] Punch &bull; [K] Kick &bull; [L] Blast &bull; [I] SUPER &bull; [U] RAGE &nbsp;|&nbsp; [P/Esc] Pause
         </div>
         <div class="controls-info hidden" id="touch-info">
-            Left pad: move / jump / block &bull; Right: PUNCH &bull; KICK &bull; BLAST (30% meter) &bull; SUPER (full meter) &bull; RAGE (low health)
+            Left pad: move / jump / block &bull; Right: PUNCH &bull; KICK &bull; BLAST (30% meter) &bull; SUPER (full meter) &bull; RAGE (low health)<br>
+            Local 2P: each player gets their own controls (P1 cyan, P2 pink)
         </div>
     </div>
 
@@ -817,12 +866,15 @@ function fit() {
     const tall = SH > H * vz;
     stage.classList.toggle('tall', tall);
     stage.style.setProperty('--cell', Math.min(142, Math.floor((stageW - 60) / 6)) + 'px'); // portrait touch button grid
+    // Local 2P buttons: upright = one row per player (5 buttons wide), sideways = both players side by side (10 wide)
+    stage.style.setProperty('--c2', Math.floor(tall ? Math.min(96, (stageW - 90) / 5) : Math.min(100, (stageW - 230) / 10)) + 'px');
     // menus are designed for 1240x720 (landscape) or reflow to ~720x1350 on tall stages
     const k = tall ? Math.min(1.5, stageW / 720, SH / 1350) : Math.min(1, stageW / 1240, SH / 720);
     stage.style.setProperty('--k', k);
     stage.style.setProperty('--ow', (stageW / k) + 'px');
     stage.style.setProperty('--oh', (SH / k) + 'px');
     $('rotate-hint').style.display = (isTouch && vh > vw) ? 'block' : 'none';
+    if (typeof G !== 'undefined') refreshTouchUI(); // layout may have switched between sideways and upright
 }
 function fitSoon() { clearTimeout(fitTimer); fitTimer = setTimeout(fit, 120); }
 window.addEventListener('resize', fitSoon);
@@ -871,7 +923,7 @@ if (window.visualViewport) window.visualViewport.addEventListener('resize', () =
 window.addEventListener('blur', () => { for (const k in keys) keys[k] = false; });
 
 function setupTouch() {
-    document.querySelectorAll('#touch .tb[data-k]').forEach(btn => {
+    document.querySelectorAll('#touch .tb[data-k], #touch2p .tb[data-k]').forEach(btn => {
         const code = btn.dataset.k;
         const down = e => { e.preventDefault(); audio.init(); keys[code] = true; tapped[code] = true; btn.classList.add('down-on'); };
         const up = e => { e.preventDefault(); keys[code] = false; btn.classList.remove('down-on'); };
@@ -882,7 +934,7 @@ function setupTouch() {
         btn.addEventListener('contextmenu', e => e.preventDefault());
         btn.addEventListener('touchstart', e => e.preventDefault(), { passive: false });
     });
-    $('tb-pause').addEventListener('pointerdown', e => { e.preventDefault(); setPaused(true); });
+    for (const id of ['tb-pause', 'tb-pause2']) $(id).addEventListener('pointerdown', e => { e.preventDefault(); setPaused(true); });
     window.addEventListener('touchstart', () => {
         if (!isTouch) { isTouch = true; refreshTouchUI(); fit(); }
     }, { passive: true });
@@ -890,6 +942,9 @@ function setupTouch() {
 function refreshTouchUI() {
     const inMatch = ['intro', 'fight', 'ko', 'matchEnd'].includes(G.phase);
     $('touch').classList.toggle('hidden', !(isTouch && inMatch && G.mode !== 'pvp'));
+    $('touch2p').classList.toggle('hidden', !(isTouch && inMatch && G.mode === 'pvp'));
+    // the controls-help icon sits where P1's pad goes on sideways screens: hide it there during 2P matches
+    $('help-btn').classList.toggle('hidden', isTouch && inMatch && G.mode === 'pvp' && !$('stage').classList.contains('tall'));
     $('keys-info').classList.toggle('hidden', isTouch);
     $('touch-info').classList.toggle('hidden', !isTouch);
 }
@@ -2859,6 +2914,10 @@ function updateHUD(force) {
     });
     setClass('tb-super', 'ready', player1.super >= 100);
     setClass('tb-rage', 'ready', player1.canRage());
+    if (G.mode === 'pvp') {
+        setClass('tp1-super', 'ready', player1.super >= 100); setClass('tp1-rage', 'ready', player1.canRage());
+        setClass('tp2-super', 'ready', player2.super >= 100); setClass('tp2-rage', 'ready', !player2.isHorde && player2.canRage());
+    }
     if (player2.isHorde) {
         const nm = `ZOMBIES ×${player2.total - player2.killed}`;
         if (hudCache.p2n !== nm) { hudCache.p2n = nm; $('p2-name').textContent = nm; }

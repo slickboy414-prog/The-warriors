@@ -21,7 +21,7 @@ Brawltop is a free arcade fighting game built in a single HTML5 file. Fight best
 | Super (full meter) | T | I / Num 0 |
 | Pause | P / Esc | P / Esc |
 
-On phones and tablets, touch controls appear during VS CPU and Levels matches.
+On phones and tablets, touch controls appear in every mode. In **Local 2P** each player gets a full set of their own (P1 cyan, P2 pink): side by side in the bottom corners when the device is held sideways, or stacked in the control panel when it is held upright. Both players can press at the same time.
 
 **Fits any screen:** the arena takes the shape of the device. Wide phones in landscape get a wider arena with no black bars, tablets and 16:10 laptops get a narrower one, and phones held upright use a 9:16 frame (like YouTube Shorts) with the arena on top and large touch controls underneath. Rotating the device switches the layout instantly. A fight camera zooms in (up to 1.3×) when the fighters are close and pulls back to keep everyone on screen.
 
