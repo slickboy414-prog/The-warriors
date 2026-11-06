@@ -55,3 +55,12 @@ On phones and tablets, touch controls appear during VS CPU and Levels matches.
 ## YouTube Playables
 
 The page loads the YouTube Playables SDK and handles pause, resume and the audio toggle. Outside YouTube it runs as a normal web page.
+
+## Sample improvements (branch `improvements-sample`)
+
+A playable sample of the top ideas from the fighting-game research. Not on the live site until merged.
+
+- **Input buffer:** a button tapped up to 8 frames before you can act is remembered and fires the moment you recover, so fast taps are never lost.
+- **Interactive tutorial** (TUTORIAL on the main menu): 8 guided steps against a training dummy covering move, punch, kick, block, Blast, Super, Rage and the finisher. Pays +50 coins the first time.
+- **Rage mode** (R / U / RAGE button): below 30% health, once per round, 8 seconds of +30% damage and +15% speed with a red aura. The CPU uses it too.
+- **Signature finishers** on the match-winning K.O.: Pyro's *Phoenix Finish* and Valkyrie's *Thousand Cuts*.

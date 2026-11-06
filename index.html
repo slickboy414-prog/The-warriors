@@ -129,6 +129,20 @@ body { font-family: 'Impact', 'Arial Black', sans-serif; color: #fff; }
 .res-stars { font-size: 72px; letter-spacing: 14px; color: #ffcc00; text-shadow: 0 0 20px #ffcc00; margin: 4px 0; }
 .res-stars .off { color: #2c2c3a; text-shadow: none; }
 .res-info { font-family: Arial, sans-serif; font-size: 18px; color: #ccc; margin: 6px 0 26px; text-align: center; line-height: 1.6; }
+/* ---------- Sample improvements: rage, tutorial ---------- */
+.rage-label { display: none; font-size: 14px; letter-spacing: 1px; padding: 0 6px; }
+.rage-label.ready { display: inline-block; color: #ff3b3b; text-shadow: 0 0 8px #ff3b3b; animation: lowpulse .3s infinite alternate; }
+.rage-label.active { display: inline-block; color: #fff; background: #ff2a2a; box-shadow: 0 0 12px #ff2a2a; }
+.tb.g  { right: 290px; bottom: 230px; width: 110px; height: 72px; border-radius: 14px; font-size: 22px; opacity: .3; background: rgba(255,40,40,.35); }
+.tb.g.ready { opacity: 1; background: rgba(255,30,30,.65); border-color: #ff9a9a; box-shadow: 0 0 20px #ff3b3b; animation: lowpulse .3s infinite alternate; }
+#tut { position: absolute; left: 50%; top: 205px; transform: translateX(-50%); z-index: 7; pointer-events: none; display: none; text-align: center;
+       background: rgba(5,5,15,.82); border: 2px solid #00f0ff; box-shadow: 0 0 18px rgba(0,240,255,.45); padding: 10px 22px; min-width: 440px; }
+#tut.on { display: block; }
+#tut .tstep { font: 13px Arial, sans-serif; letter-spacing: 3px; color: #00f0ff; }
+#tut .ttext { font-size: 26px; letter-spacing: 1px; color: #fff; margin-top: 2px; }
+#tut.done { border-color: #7aff9a; box-shadow: 0 0 18px rgba(122,255,154,.6); }
+#stage.tall #tut { min-width: 0; width: 92%; top: 140px; }
+#stage.tall #tut .ttext { font-size: 22px; }
 /* ---------- Coins + shop ---------- */
 .coin { display: inline-block; width: 18px; height: 18px; border-radius: 50%; flex: none; background: radial-gradient(circle at 35% 35%, #fff6b0, #ffcc00 45%, #c98a00 100%); border: 2px solid #8a5a00; box-shadow: 0 0 8px rgba(255,204,0,.6); }
 .coin-pill { display: inline-flex; align-items: center; gap: 8px; font-size: 22px; color: #ffcc00; letter-spacing: 1px; text-shadow: 2px 2px 0 #000; font-variant-numeric: tabular-nums; }
@@ -216,6 +230,7 @@ kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px soli
 #stage.tall .tb.p { right: calc(20px + 2 * var(--cell)); left: auto; bottom: calc(40px + var(--cell)); font-size: 22px; }
 #stage.tall .tb.k { right: 20px; left: auto; bottom: calc(40px + var(--cell)); }
 #stage.tall .tb.s { right: calc(20px + var(--cell)); left: auto; bottom: 40px; font-size: 22px; }
+#stage.tall .tb.g { right: calc(20px + 2 * var(--cell)); left: auto; bottom: calc(40px + 2 * var(--cell)); width: calc(var(--cell) - 10px); height: calc(var(--cell) - 10px); border-radius: 50%; font-size: 22px; }
 #stage.tall .tb.pause { top: calc(720px * var(--vz, 1) + 22px); width: 90px; height: 56px; font-size: 22px; }
 .tb.pause { right: 50%; transform: translateX(50%); top: 150px; bottom: auto; width: 64px; height: 44px; border-radius: 10px; font-size: 18px; }
 </style>
@@ -232,7 +247,7 @@ kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px soli
             <div class="fighter-hud p1">
                 <div class="name-row"><div class="fighter-name" id="p1-name" style="color:#00f0ff">PYRO</div><div class="pips" id="p1-pips"><span></span><span></span></div></div>
                 <div class="bar-container"><div class="health-bar-red" id="p1-hp-red"></div><div class="health-bar-fill" id="p1-hp"></div></div>
-                <div class="super-row"><div class="super-bar-container" id="p1-super-box"><div class="super-bar-fill" id="p1-super"></div></div><div class="super-label" id="p1-super-label">SUPER</div></div>
+                <div class="super-row"><div class="super-bar-container" id="p1-super-box"><div class="super-bar-fill" id="p1-super"></div></div><div class="super-label" id="p1-super-label">SUPER</div><div class="rage-label" id="p1-rage">RAGE</div></div>
             </div>
             <div class="center-hud">
                 <div class="timer-box" id="timer">99</div>
@@ -242,12 +257,13 @@ kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px soli
             <div class="fighter-hud p2">
                 <div class="name-row"><div class="fighter-name" id="p2-name" style="color:#ff0055">VALKYRIE</div><div class="pips" id="p2-pips"><span></span><span></span></div></div>
                 <div class="bar-container"><div class="health-bar-red" id="p2-hp-red"></div><div class="health-bar-fill" id="p2-hp"></div></div>
-                <div class="super-row"><div class="super-bar-container" id="p2-super-box"><div class="super-bar-fill" id="p2-super"></div></div><div class="super-label" id="p2-super-label">SUPER</div></div>
+                <div class="super-row"><div class="super-bar-container" id="p2-super-box"><div class="super-bar-fill" id="p2-super"></div></div><div class="super-label" id="p2-super-label">SUPER</div><div class="rage-label" id="p2-rage">RAGE</div></div>
             </div>
         </div>
     </div>
 
     <div id="banner"><div class="main" id="banner-main"></div><div class="sub" id="banner-sub"></div></div>
+    <div id="tut"><div class="tstep" id="tut-step"></div><div class="ttext" id="tut-text"></div></div>
     </div>
     <div id="deck"><div class="deck-logo">THE WARRIORS</div></div>
 
@@ -261,6 +277,7 @@ kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px soli
         <button class="tb k" data-k="KeyG">KICK</button>
         <button class="tb s" data-k="KeyH">BLAST</button>
         <button class="tb x" data-k="KeyT" id="tb-super">SUPER</button>
+        <button class="tb g" data-k="KeyR" id="tb-rage">RAGE</button>
         <button class="tb pause" id="tb-pause">II</button>
     </div>
 
@@ -300,6 +317,7 @@ kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px soli
         </div>
         <div class="btn-group">
             <button class="btn" onclick="openLevels()">LEVELS</button>
+            <button class="btn alt" onclick="startTutorial()">TUTORIAL</button>
             <button class="btn alt" onclick="startMatch('ai')">VS CPU</button>
             <button class="btn alt" id="btn-pvp" onclick="startMatch('pvp')">LOCAL 2P</button>
             <button class="btn alt" onclick="openShop('menu')">SHOP</button>
@@ -388,6 +406,7 @@ kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px soli
             <tr><td>PUNCH</td><td><kbd>F</kbd></td><td><kbd>J</kbd> / <kbd>Num 1</kbd></td></tr>
             <tr><td>KICK</td><td><kbd>G</kbd></td><td><kbd>K</kbd> / <kbd>Num 2</kbd></td></tr>
             <tr><td>BLAST (30% METER)</td><td><kbd>H</kbd></td><td><kbd>L</kbd> / <kbd>Num 3</kbd></td></tr>
+            <tr><td>RAGE (LOW HEALTH, ONCE A ROUND)</td><td><kbd>R</kbd></td><td><kbd>U</kbd></td></tr>
             <tr><td>SUPER (FULL METER)</td><td class="super-row-c"><kbd>T</kbd></td><td class="super-row-c"><kbd>I</kbd> / <kbd>Num 0</kbd></td></tr>
             <tr><td>PAUSE</td><td colspan="2"><kbd>P</kbd> or <kbd>Esc</kbd></td></tr>
         </table>
@@ -477,6 +496,7 @@ const BLADE_LOOK = {
     katana: { len: 76, core: '#ffd0f4', glow: '#ff4fd8', guard: true },
     lance: { len: 92, core: '#e6d0ff', glow: '#b967ff', tip: true }
 };
+const RAGE_FRAMES = 480, RAGE_DMG = 1.3;
 const BOSS_PALETTE = { color: '#3a3a4a', dark: '#14141c', accent: '#ff2a2a', hud: '#ff4040' };
 const RANKS = [
     { name: 'ROOKIE', color: '#7af4ff' }, { name: 'FIGHTER', color: '#7aff9a' }, { name: 'VETERAN', color: '#ffcc00' },
@@ -655,8 +675,8 @@ window.addEventListener('orientationchange', () => setTimeout(fit, 250));
  * ========================================================= */
 const keys = {};
 let tapped = {};
-const P1_KEYS = { left: ['KeyA'], right: ['KeyD'], up: ['KeyW'], down: ['KeyS'], punch: ['KeyF'], kick: ['KeyG'], special: ['KeyH'], super: ['KeyT'] };
-const P2_KEYS = { left: ['ArrowLeft'], right: ['ArrowRight'], up: ['ArrowUp'], down: ['ArrowDown'], punch: ['KeyJ', 'Numpad1'], kick: ['KeyK', 'Numpad2'], special: ['KeyL', 'Numpad3'], super: ['KeyI', 'Numpad0'] };
+const P1_KEYS = { left: ['KeyA'], right: ['KeyD'], up: ['KeyW'], down: ['KeyS'], punch: ['KeyF'], kick: ['KeyG'], special: ['KeyH'], super: ['KeyT'], rage: ['KeyR'] };
+const P2_KEYS = { left: ['ArrowLeft'], right: ['ArrowRight'], up: ['ArrowUp'], down: ['ArrowDown'], punch: ['KeyJ', 'Numpad1'], kick: ['KeyK', 'Numpad2'], special: ['KeyL', 'Numpad3'], super: ['KeyI', 'Numpad0'], rage: ['KeyU', 'NumpadDecimal'] };
 const held = codes => codes.some(c => keys[c]);
 const tap = codes => codes.some(c => tapped[c]);
 
@@ -1079,6 +1099,12 @@ function drawFigure(f, o = {}) {
     ctx.save();
     ctx.globalAlpha = o.alpha ?? 1;
     ctx.translate(f.x, f.y);
+    if (f.rage > 0 && !o.tint) { // RAGE aura
+        const pulse = 0.5 + 0.5 * Math.sin(f.animT * 0.3);
+        const ag = ctx.createRadialGradient(0, -75, 10, 0, -75, 110);
+        ag.addColorStop(0, `rgba(255,40,40,${0.35 + pulse * 0.2})`); ag.addColorStop(1, 'rgba(255,0,0,0)');
+        ctx.fillStyle = ag; ctx.beginPath(); ctx.ellipse(0, -75, 75, 115, 0, 0, Math.PI * 2); ctx.fill();
+    }
     if (!o.noShadow) {
         const h = clamp((GROUND_Y - f.y) / 200, 0, 1);
         ctx.fillStyle = `rgba(0,0,0,${0.45 - h * 0.25})`;
@@ -1237,7 +1263,7 @@ class Fighter {
             x, y: GROUND_Y, vx: 0, vy: 0, facing: this.idx === 0 ? 1 : -1, hp: this.maxHp,
             state: 'idle', stateTimer: 0, isGrounded: true, isDead: false, hasHit: false,
             combo: 0, comboTimer: 0, flash: 0, animT: 0, koRot: 0,
-            superPhase: null, superT: 0, rushHits: 0, aiCD: 40, aiBlock: 0, aiAA: false, hist: []
+            superPhase: null, superT: 0, rushHits: 0, aiCD: 40, aiBlock: 0, aiAA: false, hist: [], rage: 0, rageUsed: false, buf: null
         });
     }
     get name() { return this.A.name; }
@@ -1269,6 +1295,11 @@ class Fighter {
         this.x = clamp(this.x, LEFT, RIGHT);
 
         if (this.comboTimer > 0 && --this.comboTimer === 0) this.combo = 0;
+        if (this.rage > 0) {
+            this.rage--;
+            if (this.rage % 3 === 0) addFx({ type: 'spark', x: this.x + rand(-22, 22), y: this.y - rand(10, 130), vx: rand(-0.6, 0.6), vy: rand(-3, -1), r: rand(2, 5), color: Math.random() < 0.5 ? '#ff2a2a' : '#ff8a3d', grav: -0.03, decay: 0.05 });
+            if (this.rage === 0) floatText(this.x, this.y - 190, 'RAGE OVER', '#aa5555', 22);
+        }
         if (this.stateTimer > 0) {
             this.stateTimer--;
             if (this.stateTimer === 0 && ['punch', 'kick', 'special', 'hit'].includes(this.state)) {
@@ -1289,7 +1320,7 @@ class Fighter {
     canAttack() { return this.isGrounded && ['idle', 'walk', 'block'].includes(this.state); }
     move(dir) {
         if (!['idle', 'walk', 'jump'].includes(this.state)) return;
-        if (this.isGrounded) { this.vx = dir * this.A.speed * this.speedMult; this.state = 'walk'; }
+        if (this.isGrounded) { this.vx = dir * this.A.speed * this.speedMult * (this.rage > 0 ? 1.15 : 1); this.state = 'walk'; }
         else this.vx = clamp(this.vx + dir * 0.4, -this.A.speed, this.A.speed);
     }
     jump() {
@@ -1320,10 +1351,25 @@ class Fighter {
         this.super = 0; this.state = 'super'; this.superT = 0; this.rushHits = 0; this.vx = 0;
         this.superPhase = this.arch === 'blade' ? 'dash' : 'cast';
         G.freeze = 55; G.freezeBy = this; G.flash = 0.5; G.flashColor = this.A.color;
+        if (G.mode === 'tutorial' && this === player1) G.tut.superUsed = true;
         audio.superStart();
         for (let i = 0; i < 3; i++) ring(this.x, this.y - 80, i ? this.A.color : '#fff', 20 + i * 15, 8, 8, 0.03);
     }
     endSuper() { this.state = 'idle'; this.superPhase = null; }
+    // RAGE: unlocks once per round below 30% health; 8 s of +30% damage and +15% speed
+    canRage() { return !this.rageUsed && !this.isDead && G.phase === 'fight' && this.hp <= this.maxHp * 0.3 && !['super', 'hit', 'ko', 'win'].includes(this.state); }
+    activateRage() {
+        if (!this.canRage()) return false;
+        this.rageUsed = true; this.rage = RAGE_FRAMES;
+        this.super = Math.min(100, this.super + 20);
+        G.flash = 0.55; G.flashColor = '#ff2a2a'; G.shake = Math.max(G.shake, 12); G.hitStop = Math.max(G.hitStop, 8);
+        for (let i = 0; i < 3; i++) ring(this.x, this.y - 80, i ? '#ff2a2a' : '#ffffff', 16 + i * 16, 9, 8, 0.035);
+        sparks(this.x, this.y - 80, '#ff3b3b', 26, 14);
+        floatText(this.x, this.y - 205, 'RAGE!', '#ff3b3b', 46);
+        audio.tone('sawtooth', 70, 420, .45, .35); audio.noise(.5, .45, 500);
+        if (G.mode === 'tutorial' && this === player1) G.tut.rageUsed = true;
+        return true;
+    }
 
     updateSuper(op) {
         this.superT++;
@@ -1374,7 +1420,9 @@ class Fighter {
         if (Math.abs(reach - op.x) < range / 2 + 30 && Math.abs(this.y - op.y) < 90) {
             this.hasHit = true;
             const bonus = this.state === 'punch' ? this.stats.punch : this.stats.kick;
-            this.onLanded(op.takeDamage(m.dmg + bonus, m.heavy, this), m.meter, op);
+            const res = op.takeDamage(m.dmg + bonus, m.heavy, this);
+            if (G.mode === 'tutorial' && this === player1 && res === 'hit') G.tut.hits[this.state] = true;
+            this.onLanded(res, m.meter, op);
         }
     }
     onLanded(result, meter, op) {
@@ -1387,7 +1435,7 @@ class Fighter {
 
     takeDamage(dmg, heavy, attacker, o = {}) {
         if (this.isDead || G.phase !== 'fight') return 'none';
-        dmg = Math.max(1, Math.round(dmg * (attacker.dmgMult || 1)));
+        dmg = Math.max(1, Math.round(dmg * (attacker.dmgMult || 1) * (attacker.rage > 0 ? RAGE_DMG : 1)));
         const hx = this.x - attacker.facing * 15, hy = this.y - 85;
         if (this.state === 'block' && !o.unblockable) {
             const chip = Math.max(1, Math.round(dmg * 0.15));
@@ -1399,6 +1447,7 @@ class Fighter {
             sparks(hx, hy, '#00f0ff', 8, 8);
             ring(hx, hy, '#00f0ff', 14, 4, 4);
             floatText(this.x, this.y - 150, 'BLOCK', '#00f0ff', 26);
+            if (G.mode === 'tutorial' && this === player1) G.tut.blocked = true;
             return 'block';
         }
         const counter = ['punch', 'kick', 'special'].includes(this.state) && !o.fromSuper && !attacker.noCounter;
@@ -1493,7 +1542,7 @@ class Zombie {
     }
     takeDamage(dmg, heavy, attacker, o = {}) {
         if (!this.targetable() || G.phase !== 'fight') return 'none';
-        dmg = Math.max(1, Math.round(dmg * (attacker.dmgMult || 1)));
+        dmg = Math.max(1, Math.round(dmg * (attacker.dmgMult || 1) * (attacker.rage > 0 ? RAGE_DMG : 1)));
         this.hp = Math.max(0, this.hp - dmg);
         this.flash = 8;
         if (!o.noKnock) this.vx = attacker.facing * (heavy ? 9 : 5) / (this.king ? 2 : 1);
@@ -1707,7 +1756,7 @@ function updateProjectiles() {
                 const zy = p.kind === 'inferno' ? Math.abs((z.y - 70) - p.y) < 110 : Math.abs(p.y - (z.y - 80)) < p.r + 50;
                 if (Math.abs(p.x - z.x) < p.r + 22 && zy) {
                     p.hitZ.push(z);
-                    const r = z.takeDamage(p.dmg, p.heavy, { facing: Math.sign(p.vx), A: p.owner.A, dmgMult: p.owner.dmgMult, x: p.x }, { launch: p.launch });
+                    const r = z.takeDamage(p.dmg, p.heavy, { facing: Math.sign(p.vx), A: p.owner.A, dmgMult: p.owner.dmgMult, rage: p.owner.rage, x: p.x }, { launch: p.launch });
                     p.owner.onLanded(r, p.big ? 0 : 6, z);
                     if (!p.big) { p.dead = true; break; }
                 }
@@ -1715,8 +1764,9 @@ function updateProjectiles() {
         } else {
             const hitY = p.kind === 'inferno' ? Math.abs((target.y - 70) - p.y) < 110 : Math.abs(p.y - (target.y - 80)) < p.r + 50;
             if (!target.isDead && Math.abs(p.x - target.x) < p.r + 25 && hitY) {
-                const pseudo = { facing: Math.sign(p.vx), A: p.owner.A, dmgMult: p.owner.dmgMult };
+                const pseudo = { facing: Math.sign(p.vx), A: p.owner.A, dmgMult: p.owner.dmgMult, rage: p.owner.rage };
                 const r = target.takeDamage(p.dmg, p.heavy, pseudo, { launch: p.launch, fromSuper: p.big });
+                if (G.mode === 'tutorial' && p.owner === player1 && r === 'hit') G.tut.hits[p.big ? 'inferno' : 'blast'] = true;
                 p.owner.onLanded(r, p.big ? 0 : 6, target);
                 if (p.big) { for (let k = 0; k < 3; k++) ring(target.x, target.y - 80, '#ffcc00', 20 + k * 20, 9, 8, 0.04); sparks(target.x, target.y - 80, '#ff5500', 30, 18); }
                 p.dead = true;
@@ -1794,6 +1844,7 @@ function updateAI(ai, t) {
     if ((seen.state === 'punch' || seen.state === 'kick') && seen.st < 8 && dist < 150 && ai.aiCD <= 0 && Math.random() < P.punish * 0.15) {
         ai.punch(); ai.aiCD = P.attackCD[0]; return;
     }
+    if (ai.canRage() && Math.random() < 0.03) { ai.activateRage(); return; }
     if (ai.super >= 100 && dist > 90 && dist < 450 && Math.random() < P.superP) { ai.doSuper(); return; }
     if (dist > 300 && ai.super >= 30 && Math.random() < P.fireballP) { ai.special(); return; }
 
@@ -1810,15 +1861,26 @@ function updateAI(ai, t) {
     } else if (Math.random() < P.footsies * 0.04) ai.move(-dir);
 }
 
+/* Input buffer: a button tapped while you are still busy (finishing an attack, landing,
+ * recovering from a hit) is remembered for a few frames and fires the moment you can act. */
+const BUFFER_FRAMES = 8;
+function tryAction(f, a) {
+    if (a === 'rage') return f.activateRage();
+    if (a === 'super') f.doSuper(); else if (a === 'special') f.special(); else if (a === 'kick') f.kick(); else f.punch();
+}
 function playerInput(f, map) {
     if (f.isDead) return;
     if (held(map.down)) f.block(); else f.unblock();
     if (held(map.left)) f.move(-1); else if (held(map.right)) f.move(1);
     if (held(map.up)) f.jump();
-    if (tap(map.super)) f.doSuper();
-    else if (tap(map.special)) f.special();
-    else if (tap(map.kick)) f.kick();
-    else if (tap(map.punch)) f.punch();
+    const a = tap(map.rage) ? 'rage' : tap(map.super) ? 'super' : tap(map.special) ? 'special' : tap(map.kick) ? 'kick' : tap(map.punch) ? 'punch' : null;
+    if (a) f.buf = { a, t: BUFFER_FRAMES };
+    if (f.buf) {
+        const before = f.state;
+        const ok = tryAction(f, f.buf.a);
+        if (ok === true || f.state !== before) f.buf = null;   // it came out
+        else if (--f.buf.t <= 0) f.buf = null;                 // too late: forget it
+    }
 }
 
 /* =========================================================
@@ -1900,7 +1962,9 @@ function startRound() {
     G.freeze = 0; G.hitStop = 0; G.slow = 0; G.zoom = 1; G.zoomTarget = 1; G.shake = 0;
     G.phase = 'intro'; G.phaseT = 0; G.roundWinner = null;
     $('round-label').textContent = (lv ? `LV ${G.level} • ` : '') + (G.final ? 'FINAL ROUND' : `ROUND ${G.round}`);
-    if (G.final) showBanner('FINAL ROUND', 'BURNING ARENA • FULL SUPER • 60 SECONDS', '', '#ff6a00');
+    G.fin = null;
+    if (G.mode === 'tutorial') { showBanner('TUTORIAL', 'LEARN THE BASICS IN 30 SECONDS', '', '#00f0ff'); $('round-label').textContent = 'TRAINING'; }
+    else if (G.final) showBanner('FINAL ROUND', 'BURNING ARENA • FULL SUPER • 60 SECONDS', '', '#ff6a00');
     else showBanner(`ROUND ${G.round}`, lv ? (zombies ? `LEVEL ${G.level} • DEFEAT ${zombieCount(G.level)} ZOMBIES${G.level === 50 ? ' • ZOMBIE KING' : ''}` : `LEVEL ${G.level} • ${rankOf(G.level).name}${G.ai.boss ? ' • BOSS' : ''}`) : '', '', zombies ? '#8dff5a' : G.ai && lv && G.ai.boss ? '#ff2a2a' : '#00f0ff');
     audio.announce(false);
     audio.startBGM(G.final);
@@ -1914,7 +1978,52 @@ function onKO(victim) {
     G.slow = 80;
     G.zoomTarget = 1.35; G.zx = clamp(victim.x, 200, W - 200); G.zy = victim.y - 90;
     G.flash = 1; G.flashColor = '#ffffff';
-    showBanner('K.O.', '', 'ko', victim.idx === 0 ? player2.A.color : player1.A.color);
+    const winner = victim.idx === 0 ? player2 : player1;
+    const matchPoint = G.mode === 'tutorial' || (!winner.isHorde && G.wins[winner.idx] === 1);
+    if (matchPoint && !winner.isHorde) {
+        G.fin = { type: winner.arch === 'brawler' ? 'phoenix' : 'cuts', t: 0, x: victim.x, y: victim.y, winner };
+        G.slow = 110;
+        showBanner('K.O.', G.fin.type === 'phoenix' ? 'PHOENIX FINISH' : 'THOUSAND CUTS', 'ko', winner.A.color);
+    } else showBanner('K.O.', '', 'ko', winner.A.color);
+}
+function updateFinisher() {
+    const F = G.fin; if (!F) return;
+    F.t++;
+    if (F.type === 'phoenix') {
+        if (F.t % 2 === 0 && F.t < 80) for (let i = 0; i < 3; i++) addFx({ type: 'spark', x: F.x + rand(-70, 70), y: GROUND_Y - rand(0, 30), vx: rand(-1, 1), vy: rand(-9, -4), r: rand(4, 10), color: ['#ffcc00', '#ff5500', '#fff3b0'][i], grav: -0.08, decay: 0.03 });
+        if (F.t === 12) { audio.fireball(); audio.thunder(); G.shake = Math.max(G.shake, 16); for (let i = 0; i < 4; i++) ring(F.x, F.y - 90, i % 2 ? '#ff5500' : '#ffcc00', 20 + i * 25, 11, 9, 0.025); }
+    } else {
+        if (F.t < 50 && F.t % 5 === 0) { slashFX(F.x + rand(-20, 20), F.y - 80 + rand(-30, 30), F.t % 10 ? '#00f0ff' : '#ff2a6d'); audio.slash(); }
+        if (F.t === 52) { G.flash = Math.max(G.flash, 0.8); G.flashColor = '#bff8ff'; G.shake = Math.max(G.shake, 14); for (let i = 0; i < 3; i++) ring(F.x, F.y - 80, '#ffffff', 20 + i * 20, 12, 8, 0.03); sparks(F.x, F.y - 80, '#00f0ff', 40, 20); }
+    }
+    if (F.t > 130) G.fin = null;
+}
+function drawFinisher() {
+    const F = G.fin; if (!F) return;
+    const k = Math.min(1, F.t / 30), fade = F.t > 90 ? Math.max(0, 1 - (F.t - 90) / 40) : 1;
+    ctx.save();
+    ctx.globalAlpha = fade;
+    if (F.type === 'phoenix') { // giant fire bird spreading its wings over the fallen fighter
+        const cx = F.x, cy = F.y - 120 - k * 40, span = 60 + k * 230, flap = Math.sin(F.t * 0.25) * 18;
+        for (const side of [-1, 1]) {
+            const g = ctx.createLinearGradient(cx, cy, cx + side * span, cy - 60);
+            g.addColorStop(0, 'rgba(255,243,176,0.95)'); g.addColorStop(0.45, 'rgba(255,138,0,0.8)'); g.addColorStop(1, 'rgba(255,40,0,0)');
+            ctx.fillStyle = g;
+            ctx.beginPath(); ctx.moveTo(cx, cy);
+            ctx.quadraticCurveTo(cx + side * span * 0.5, cy - 150 * k + flap, cx + side * span, cy - 40 + flap);
+            ctx.quadraticCurveTo(cx + side * span * 0.55, cy - 10, cx, cy + 40); ctx.fill();
+        }
+        ctx.fillStyle = 'rgba(255,220,120,0.9)'; ctx.beginPath(); ctx.ellipse(cx, cy, 16 + k * 8, 34 + k * 16, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(cx - 8, cy + 30); ctx.lineTo(cx, cy + 110 * k); ctx.lineTo(cx + 8, cy + 30); ctx.fill();
+    } else { // afterimages of the winner circling the target
+        const w = F.winner;
+        for (let i = 0; i < 6 && F.t < 60; i++) {
+            const a = F.t * 0.35 + i * Math.PI / 3, r = 95 - F.t * 0.6;
+            drawFigure({ x: F.x + Math.cos(a) * r, y: GROUND_Y, facing: Math.cos(a) > 0 ? -1 : 1, state: 'super', superPhase: 'dash', arch: w.arch, A: w.A, animT: F.t, stateTimer: 0, koRot: 0, flash: 0, gear: w.gear },
+                { alpha: 0.35 * fade, tint: i % 2 ? '#00f0ff' : '#ff2a6d', noShadow: true });
+        }
+    }
+    ctx.restore();
 }
 function onTimeUp() {
     G.phase = 'ko'; G.phaseT = 0;
@@ -1951,11 +2060,12 @@ function phaseLogic() {
         if (G.phaseT === 80) { showBanner('FIGHT!', '', '', '#ff0055'); audio.announce(true); }
         if (G.phaseT === 120) { hideBanner(); G.phase = 'fight'; }
     } else if (G.phase === 'fight') {
-        if (++G.timerF >= 60) {
+        if (G.mode !== 'tutorial' && ++G.timerF >= 60) {
             G.timerF = 0; G.timer--;
             if (G.timer <= 0) { G.timer = 0; onTimeUp(); }
         }
     } else if (G.phase === 'ko') {
+        if (G.mode === 'tutorial') { tutorialEnd(); return; }
         if (G.phaseT === 85) resolveRound();
         if (G.phaseT === 210) {
             const w = G.roundWinner;
@@ -1976,6 +2086,7 @@ function phaseLogic() {
 
 function showMenu() {
     hideBanner();
+    $('tut').classList.remove('on');
     G.phase = 'menu';
     audio.stopBGM();
     $('hud').classList.add('hidden');
@@ -2010,6 +2121,7 @@ function mergeProgress(str) {
             progress.owned = Array.isArray(d.owned) ? d.owned.filter(x => typeof x === 'string').slice(0, 100) : [];
             progress.equip = (d.equip && typeof d.equip === 'object') ? d.equip : {};
             progress.rev = d.rev | 0;
+            if (d.tutorialDone) progress.tutorialDone = true;
         }
         updateCoinsUI();
     } catch (e) { /* ignore bad save */ }
@@ -2212,6 +2324,64 @@ function drawShopPreview() {
     try { drawFigure(f); } finally { ctx = main; }
 }
 
+/* ---------- Interactive tutorial (sample) ---------- */
+const TUT_STEPS = [
+    { text: t => `MOVE: hold ${t ? '◀ / ▶' : 'A / D'} to walk to the dummy`, done: () => Math.abs(player1.x - G.tut.x0) > 110 },
+    { text: t => `PUNCH: tap ${t ? 'PUNCH' : 'F'}`, done: () => G.tut.hits.punch },
+    { text: t => `KICK: tap ${t ? 'KICK' : 'G'}. It reaches further`, done: () => G.tut.hits.kick },
+    { text: t => `BLOCK: hold ${t ? 'BLOCK' : 'S'} when the dummy swings`, done: () => G.tut.blocked },
+    { text: t => `BLAST: your meter is charged. Tap ${t ? 'BLAST' : 'H'}`, start: () => { player1.super = Math.max(player1.super, 35); }, done: () => G.tut.hits.blast },
+    { text: t => `SUPER: meter full! Tap ${t ? 'SUPER' : 'T'}`, start: () => { player1.super = 100; }, done: () => G.tut.superUsed },
+    { text: t => `RAGE: low health unlocks it once a round. Tap ${t ? 'RAGE' : 'R'}`, start: () => { player1.hp = Math.round(player1.maxHp * 0.25); player1.rageUsed = false; player1.rage = 0; }, done: () => G.tut.rageUsed },
+    { text: () => 'FINISH IT! Land the K.O. to see your signature finisher', start: () => { player2.hp = 14; }, done: () => false }
+];
+function startTutorial() {
+    audio.init();
+    G.mode = 'tutorial'; G.ai = aiParams(1);
+    const p2Arch = G.p1Arch === 'brawler' ? 'blade' : 'brawler';
+    player1 = new Fighter(G.p1Arch, 0, { gear: loadout(G.p1Arch) });
+    player2 = new Fighter(p2Arch, 1, { name: 'TRAINING DUMMY', palette: { color: '#8a8a9a', dark: '#4a4a58', accent: '#ffcc00', hud: '#bbbbbb' } });
+    setupMatchHUD('TRAINING DUMMY');
+    G.tut = { step: -1, x0: 0, hits: {}, blocked: false, superUsed: false, rageUsed: false, wait: 0, swing: 0 };
+    startRound();
+}
+function setTutText(stepLabel, text, done) {
+    $('tut').classList.add('on'); $('tut').classList.toggle('done', !!done);
+    $('tut-step').textContent = stepLabel; $('tut-text').textContent = text;
+}
+function tickTutorial() {
+    const T = G.tut, n = TUT_STEPS.length;
+    if (T.step === -1) { T.step = 0; T.x0 = player1.x; setTutText(`STEP 1 / ${n}`, TUT_STEPS[0].text(isTouch)); return; }
+    if (T.wait > 0) { // short "nice!" pause between steps
+        if (--T.wait === 0) { T.step++; const S = TUT_STEPS[T.step]; if (S.start) S.start(); setTutText(`STEP ${T.step + 1} / ${n}`, S.text(isTouch)); }
+        return;
+    }
+    const S = TUT_STEPS[T.step];
+    if (T.step < n - 1) { player2.hp = player2.maxHp; }                       // the dummy can't be K.O.'d early
+    if (T.step !== 6) player1.hp = Math.max(player1.hp, 40); else player1.hp = Math.max(player1.hp, 8);
+    if (T.step === 4 && player1.super < 30 && !projectiles.some(q => q.owner === player1)) player1.super = 35;
+    if (T.step === 5 && player1.super < 100 && !T.superUsed && player1.state !== 'super') player1.super = 100;
+    if (S.done()) { setTutText(`STEP ${T.step + 1} / ${n}`, 'NICE!', true); audio.announce(true); T.wait = 50; }
+}
+function tutorialDummy(d, p) {
+    const dist = Math.abs(d.x - p.x), dir = d.x < p.x ? 1 : -1;
+    d.unblock();
+    if (G.tut.step !== 3) { if (dist > 380) d.move(dir); return; }          // stands still except in the BLOCK lesson
+    if (dist > 120) { d.move(dir); return; }
+    if (--G.tut.swing <= 0 && d.canAttack()) { d.punch(); G.tut.swing = 70; }
+}
+function tutorialEnd() {
+    if (G.phaseT === 90) {
+        $('tut').classList.remove('on');
+        const first = !progress.tutorialDone;
+        progress.tutorialDone = true;
+        if (first) { progress.coins += 50; saveProgress(); updateCoinsUI(); }
+        showBanner('TUTORIAL COMPLETE', first ? '+50 COINS • NOW TRY LEVELS' : 'NOW TRY LEVELS', '', '#7aff9a');
+        audio.announce(true);
+    }
+    if (G.phaseT === 240) showMenu();
+}
+
 function setPaused(p) {
     if (p && G.phase === 'menu') return;
     G.paused = p;
@@ -2259,8 +2429,13 @@ function updateHUD(force) {
         const full = f.super >= 100;
         setClass(`p${n}-super-box`, 'full', full);
         setClass(`p${n}-super-label`, 'full', full);
+        if (!f.isHorde) {
+            setClass(`p${n}-rage`, 'ready', f.canRage() && f.rage === 0);
+            setClass(`p${n}-rage`, 'active', f.rage > 0);
+        }
     });
     setClass('tb-super', 'ready', player1.super >= 100);
+    setClass('tb-rage', 'ready', player1.canRage());
     if (player2.isHorde) {
         const nm = `ZOMBIES ×${player2.total - player2.killed}`;
         if (hudCache.p2n !== nm) { hudCache.p2n = nm; $('p2-name').textContent = nm; }
@@ -2281,6 +2456,7 @@ function simStep() {
     updateCamera();
     if (G.shake > 0) { G.shake *= 0.86; if (G.shake < 0.5) G.shake = 0; }
     if (!player1) return;
+    updateFinisher();
     if (G.hitStop > 0) { G.hitStop--; return; }
     if (G.freeze > 0) { G.freeze--; return; }
     if (G.slow > 0) { G.slow--; if (G.frame % 3 !== 0) return; }
@@ -2288,6 +2464,7 @@ function simStep() {
     if (G.phase === 'fight') {
         playerInput(player1, P1_KEYS);
         if (G.mode === 'pvp') playerInput(player2, P2_KEYS);
+        else if (G.mode === 'tutorial') tutorialDummy(player2, player1);
         else if (!player2.isHorde) updateAI(player2, player1);
     } else {
         player1.unblock(); player2.unblock();
@@ -2297,6 +2474,7 @@ function simStep() {
     if (!player2.isHorde) separate(player1, player2);
     updateProjectiles();
     updateFx();
+    if (G.mode === 'tutorial' && G.phase === 'fight') tickTutorial();
     phaseLogic();
     updateHUD();
 }
@@ -2354,6 +2532,7 @@ function render() {
             else drawFigure(f);
         }
         drawProjectiles();
+        drawFinisher();
     }
     drawStageFront();
     if (player1) drawFx(fx.filter(p => p.type !== 'after'));
