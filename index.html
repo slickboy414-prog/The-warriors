@@ -11,18 +11,22 @@
 html, body { width: 100%; height: 100%; background: #000; overflow: hidden; touch-action: none; overscroll-behavior: none; }
 body { font-family: 'Impact', 'Arial Black', sans-serif; color: #fff; }
 
-/* Fixed 1280x720 logical stage, scaled to fit any device (letterboxed) */
+/* Logical stage sized to the device's shape: the arena widens or narrows with the screen,
+   and on tall/portrait screens a touch control deck fills the space under the arena. */
 #stage {
     position: absolute; left: 50%; top: 50%;
-    width: 1280px; height: 720px;
+    width: var(--sw, 1280px); height: var(--sh, 720px);
     transform: translate(-50%, -50%) scale(var(--s, 1));
     transform-origin: center center;
     overflow: hidden; background: #000;
 }
-canvas { width: 1280px; height: 720px; display: block; }
+#gameCanvas { position: absolute; left: 0; top: 0; width: var(--sw, 1280px); height: 720px; display: block; }
+#deck { display: none; position: absolute; left: 0; right: 0; top: 720px; bottom: 0; background: linear-gradient(180deg, #120a24 0%, #07050f 100%); border-top: 3px solid #ff0055; box-shadow: inset 0 12px 30px rgba(255,0,85,.15); }
+#stage.tall #deck { display: block; }
+#deck .deck-logo { position: absolute; left: 0; right: 0; top: 40px; text-align: center; font-size: 40px; letter-spacing: 8px; color: rgba(255,255,255,.08); }
 
 /* ---------- HUD ---------- */
-.ui-layer { position: absolute; inset: 0; pointer-events: none; padding: 20px 24px; }
+.ui-layer { position: absolute; left: 0; right: 0; top: 0; height: 720px; pointer-events: none; padding: 20px 24px; }
 .hud-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; }
 .fighter-hud { flex: 1; display: flex; flex-direction: column; gap: 6px; }
 .fighter-hud.p2 { align-items: flex-end; }
@@ -57,7 +61,7 @@ canvas { width: 1280px; height: 720px; display: block; }
 #round-label { font-size: 15px; letter-spacing: 3px; color: #ffcc00; text-shadow: 2px 2px 0 #000; }
 
 /* ---------- Announcer banner ---------- */
-#banner { position: absolute; left: 0; right: 0; top: 30%; text-align: center; pointer-events: none; z-index: 6; opacity: 0; }
+#banner { position: absolute; left: 0; right: 0; top: 216px; text-align: center; pointer-events: none; z-index: 6; opacity: 0; }
 #banner .main { font-size: 110px; font-style: italic; letter-spacing: 6px; color: #fff; text-shadow: 0 0 30px var(--bc, #ff0055), 6px 6px 0 #000; }
 #banner .sub { font-size: 28px; letter-spacing: 4px; color: #ffcc00; text-shadow: 3px 3px 0 #000; margin-top: 2px; }
 #banner.show { animation: bannerIn .45s cubic-bezier(.175,.885,.32,1.275) forwards; }
@@ -66,7 +70,7 @@ canvas { width: 1280px; height: 720px; display: block; }
 @keyframes koShake { 0% { transform: translate(-6px, 4px); } 50% { transform: translate(6px, -4px); } 100% { transform: translate(0, 0); } }
 
 /* ---------- Menus ---------- */
-.overlay-screen { position: absolute; inset: 0; background: rgba(5,5,10,.78); display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: auto; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 10; }
+.overlay-screen { position: absolute; left: 0; top: 0; width: var(--ow, 100%); height: var(--oh, 100%); transform: scale(var(--k, 1)); transform-origin: 0 0; background: rgba(5,5,10,.78); display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: auto; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 10; }
 .title-text { font-size: 76px; background: linear-gradient(180deg, #fff 20%, #ff0055 80%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 22px rgba(255,0,85,.7)); letter-spacing: 6px; margin-bottom: 6px; }
 .sub-title { font-family: Arial, sans-serif; font-size: 14px; color: #999; letter-spacing: 4px; margin-bottom: 18px; }
 #result-line { font-size: 30px; letter-spacing: 3px; color: #ffcc00; text-shadow: 0 0 14px rgba(255,204,0,.6); margin-bottom: 14px; min-height: 0; }
@@ -177,6 +181,33 @@ canvas { width: 1280px; height: 720px; display: block; }
 kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px solid #777; border-bottom-width: 3px; border-radius: 5px; background: #1a1a2a; font-family: monospace; font-size: 16px; color: #fff; }
 .help-tips { font-family: Arial, sans-serif; font-size: 14px; color: #aaa; line-height: 1.7; max-width: 760px; text-align: center; margin-bottom: 18px; }
 .help-tips b { color: #fff; }
+/* portrait: menus reflow into a narrow column */
+#stage.tall .overlay-screen { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(5,5,10,.93); }
+#stage.tall .btn-group { flex-wrap: wrap; justify-content: center; max-width: 600px; row-gap: 18px; }
+#stage.tall .title-text { font-size: 64px; }
+#stage.tall .controls-info, #stage.tall .help-tips { max-width: 620px; }
+#stage.tall .res-title { font-size: 70px; }
+#stage.tall #banner .main { font-size: 84px; }
+#stage.tall #banner.ko .main { font-size: 150px; }
+#stage.tall .lv-grid { grid-template-columns: repeat(5, 80px); row-gap: 10px; }
+#stage.tall .lv-rank { grid-column: 1 / -1; text-align: left; padding: 10px 0 0; }
+#stage.tall #shop-screen { padding-top: 30px; }
+#stage.tall .shop-head { width: 680px; flex-wrap: wrap; gap: 12px 22px; }
+#stage.tall .shop-body { width: 680px; flex-direction: column; gap: 16px; }
+#stage.tall .shop-preview { width: 680px; height: auto; padding: 6px 0 12px; }
+#stage.tall #shop-canvas { width: 214px; height: 300px; }
+#stage.tall .shop-row.r4 { grid-template-columns: repeat(2, 1fr); }
+#stage.tall .shop-row.r5 { grid-template-columns: repeat(3, 1fr); }
+#stage.tall .tb { width: calc(var(--cell) - 10px); height: calc(var(--cell) - 10px); font-size: 26px; }
+#stage.tall .tb.u { left: calc(20px + var(--cell)); right: auto; bottom: calc(40px + 2 * var(--cell)); }
+#stage.tall .tb.l { left: 20px; right: auto; bottom: calc(40px + var(--cell)); }
+#stage.tall .tb.r { left: calc(20px + 2 * var(--cell)); right: auto; bottom: calc(40px + var(--cell)); }
+#stage.tall .tb.d { left: calc(20px + var(--cell)); right: auto; bottom: 40px; font-size: 21px; }
+#stage.tall .tb.x { right: calc(20px + var(--cell)); left: auto; bottom: calc(40px + 2 * var(--cell)); border-radius: 50%; font-size: 22px; }
+#stage.tall .tb.p { right: calc(20px + 2 * var(--cell)); left: auto; bottom: calc(40px + var(--cell)); font-size: 22px; }
+#stage.tall .tb.k { right: 20px; left: auto; bottom: calc(40px + var(--cell)); }
+#stage.tall .tb.s { right: calc(20px + var(--cell)); left: auto; bottom: 40px; font-size: 22px; }
+#stage.tall .tb.pause { top: 745px; width: 90px; height: 56px; font-size: 22px; }
 .tb.pause { right: 50%; transform: translateX(50%); top: 150px; bottom: auto; width: 64px; height: 44px; border-radius: 10px; font-size: 18px; }
 </style>
 </head>
@@ -184,6 +215,7 @@ kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px soli
 
 <div id="stage">
     <canvas id="gameCanvas" width="1280" height="720"></canvas>
+    <div id="deck"><div class="deck-logo">THE WARRIORS</div></div>
 
     <!-- HUD -->
     <div class="ui-layer hidden" id="hud">
@@ -224,7 +256,7 @@ kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px soli
     <!-- Main menu -->
     <div class="overlay-screen" id="menu-screen">
         <div id="menu-coins" class="coin-pill"><span class="coin"></span><span id="menu-coin-n">0</span></div>
-        <div id="rotate-hint">&#8635; ROTATE YOUR DEVICE FOR THE BEST VIEW</div>
+        <div id="rotate-hint">&#8635; TIP: ROTATE YOUR DEVICE FOR A BIGGER ARENA</div>
         <div class="title-text">THE WARRIORS</div>
         <div class="sub-title">PURE ARCADE FIGHTER &bull; BEST OF 3</div>
         <div id="result-line" class="hidden"></div>
@@ -378,8 +410,12 @@ const YT = (typeof ytgame !== 'undefined' && ytgame.IN_PLAYABLES_ENV) ? ytgame :
 /* =========================================================
  * Constants
  * ========================================================= */
-const W = 1280, H = 720, GROUND_Y = 610, GRAVITY = 0.8;
-const LEFT = 60, RIGHT = W - 60, BODY_MIN = 58, MAX_HP = 100;
+let W = 1280;            // arena width: follows the device's shape (960..1600)
+let SH = 720;            // stage height: 720 = arena only; taller adds the touch control deck
+const H = 720, GROUND_Y = 610, GRAVITY = 0.8;
+let RIGHT = W - 60;
+const LEFT = 60, BODY_MIN = 58, MAX_HP = 100;
+const W_MIN = 960, W_MAX = 1600;
 const STEP_MS = 1000 / 60;
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const rand = (a, b) => a + Math.random() * (b - a);
@@ -561,16 +597,44 @@ let ctx = canvas.getContext('2d');
 const $ = id => document.getElementById(id);
 
 /* =========================================================
- * Scaling to fit any device (keeps 16:9, letterboxes)
+ * Fit the device: the arena takes the screen's shape.
+ *  - landscape: arena is 720 tall and as wide as the screen's ratio allows (960..1600)
+ *  - portrait / near-square: arena is 960 wide on top, a control deck fills the rest
  * ========================================================= */
 let isTouch = window.matchMedia('(pointer: coarse)').matches || ('ontouchstart' in window);
+let fitTimer = null;
 function fit() {
-    const s = Math.min(window.innerWidth / W, window.innerHeight / H);
-    $('stage').style.setProperty('--s', s);
-    $('rotate-hint').style.display = (isTouch && window.innerHeight > window.innerWidth) ? 'block' : 'none';
+    const vw = Math.max(1, window.innerWidth), vh = Math.max(1, window.innerHeight), ar = vw / vh;
+    let sw, sh;
+    const DECK = 480; // room the portrait touch controls need under the arena
+    if (H * ar >= W_MIN) { sw = clamp(Math.round(H * ar), W_MIN, W_MAX); sh = H; }           // landscape: fill the width
+    else if (isTouch && 800 / ar - H >= DECK) { sw = 800; sh = Math.min(2400, Math.round(800 / ar)); } // upright phone
+    else if (isTouch && W_MIN / ar - H >= DECK) { sw = W_MIN; sh = Math.min(2400, Math.round(W_MIN / ar)); } // upright tablet
+    else { sw = W_MIN; sh = H; }                                                            // near-square: fit, small bars
+    if (sw !== W) {
+        W = sw; RIGHT = W - 60;
+        canvas.width = W;
+        if (STAGES.neon) rebuildStages();
+        if (player1) { player1.x = clamp(player1.x, LEFT, RIGHT); if (!player2.isHorde) player2.x = clamp(player2.x, LEFT, RIGHT); }
+    }
+    SH = sh;
+    const stage = $('stage');
+    stage.style.setProperty('--sw', W + 'px');
+    stage.style.setProperty('--sh', SH + 'px');
+    stage.style.setProperty('--s', Math.min(vw / W, vh / SH));
+    const tall = SH > H;
+    stage.classList.toggle('tall', tall);
+    stage.style.setProperty('--cell', Math.min(142, Math.floor((W - 60) / 6)) + 'px'); // portrait touch button grid
+    // menus are designed for 1240x720 (landscape) or reflow to ~720x1350 on tall stages
+    const k = tall ? Math.min(1.5, W / 720, SH / 1350) : Math.min(1, W / 1240, SH / 720);
+    stage.style.setProperty('--k', k);
+    stage.style.setProperty('--ow', (W / k) + 'px');
+    stage.style.setProperty('--oh', (SH / k) + 'px');
+    $('rotate-hint').style.display = (isTouch && vh > vw) ? 'block' : 'none';
 }
-window.addEventListener('resize', fit);
-window.addEventListener('orientationchange', () => setTimeout(fit, 200));
+function fitSoon() { clearTimeout(fitTimer); fitTimer = setTimeout(fit, 120); }
+window.addEventListener('resize', fitSoon);
+window.addEventListener('orientationchange', () => setTimeout(fit, 250));
 
 /* =========================================================
  * Input (keyboard + touch share the same key map)
@@ -660,16 +724,18 @@ function buildStage(name) {
         cg.addColorStop(0, 'rgba(20,0,0,0.55)'); cg.addColorStop(1, 'rgba(20,0,0,0)');
         s.fillStyle = cg; s.fillRect(cx - cr, cy - cr, cr * 2, cr * 2);
     }
-    const mg = s.createRadialGradient(T.moonX, 150, T.moonR * 0.6, T.moonX, 150, T.moonR * 3);
+    const moonX = T.moonX * W / 1280;
+    const mg = s.createRadialGradient(moonX, 150, T.moonR * 0.6, moonX, 150, T.moonR * 3);
     mg.addColorStop(0, T.moonGlow); mg.addColorStop(1, 'rgba(0,0,0,0)');
     s.fillStyle = mg; s.fillRect(0, 0, W, 600);
-    s.beginPath(); s.arc(T.moonX, 150, T.moonR, 0, Math.PI * 2); s.fillStyle = T.moon; s.fill();
+    s.beginPath(); s.arc(moonX, 150, T.moonR, 0, Math.PI * 2); s.fillStyle = T.moon; s.fill();
     s.fillStyle = 'rgba(0,0,0,0.12)';
-    for (let i = 0; i < 6; i++) { s.beginPath(); s.arc(T.moonX + (R() - .5) * T.moonR * 1.2, 150 + (R() - .5) * T.moonR * 1.2, 6 + R() * 14, 0, Math.PI * 2); s.fill(); }
+    for (let i = 0; i < 6; i++) { s.beginPath(); s.arc(moonX + (R() - .5) * T.moonR * 1.2, 150 + (R() - .5) * T.moonR * 1.2, 6 + R() * 14, 0, Math.PI * 2); s.fill(); }
 
     // Far skyline
-    const [far, f] = mkCanvas(1500, H);
-    for (let x = 0; x < 1500;) {
+    const FW = W + 240, NW = W + 340;
+    const [far, f] = mkCanvas(FW, H);
+    for (let x = 0; x < FW;) {
         const bw = 40 + R() * 90, bh = 120 + R() * 230;
         f.fillStyle = T.far; f.fillRect(x, HORIZON - bh, bw, bh + 60);
         f.fillStyle = T.farWin;
@@ -679,9 +745,9 @@ function buildStage(name) {
     }
 
     // Near skyline + neon sign anchors
-    const [near, n] = mkCanvas(1600, H);
+    const [near, n] = mkCanvas(NW, H);
     const signs = [];
-    for (let x = 0; x < 1600;) {
+    for (let x = 0; x < NW;) {
         const bw = 80 + R() * 120, bh = 170 + R() * 250, top = HORIZON - bh;
         n.fillStyle = T.near; n.fillRect(x, top, bw, bh + 60);
         n.strokeStyle = T.near; n.lineWidth = 3;
@@ -693,7 +759,7 @@ function buildStage(name) {
                 n.fillRect(wx, wy, 9, 12);
                 n.globalAlpha = 1;
             }
-        if (R() < 0.45 && signs.length < 7) signs.push({ x: x + bw / 2, y: top + 34 + R() * 50, text: pick(T.texts), color: pick(T.signs), phase: R() * 100 });
+        if (R() < 0.45 && signs.length < Math.round(7 * W / 1280)) signs.push({ x: x + bw / 2, y: top + 34 + R() * 50, text: pick(T.texts), color: pick(T.signs), phase: R() * 100 });
         x += bw + 6 + R() * 22;
     }
 
@@ -710,7 +776,8 @@ function buildStage(name) {
     r.fillStyle = 'rgba(255,255,255,0.05)'; for (let i = 0; i < 5; i++) r.fillRect(76 + i * 22, 362, 3, 98);
     // Antenna
     r.strokeStyle = T.rail; r.lineWidth = 5;
-    r.beginPath(); r.moveTo(1180, GROUND_Y - 70); r.lineTo(1180, 400); r.moveTo(1160, 440); r.lineTo(1200, 440); r.moveTo(1165, 470); r.lineTo(1195, 470); r.stroke();
+    const AX = W - 100;
+    r.beginPath(); r.moveTo(AX, GROUND_Y - 70); r.lineTo(AX, 400); r.moveTo(AX - 20, 440); r.lineTo(AX + 20, 440); r.moveTo(AX - 15, 470); r.lineTo(AX + 15, 470); r.stroke();
     // Back parapet wall + railing
     r.fillStyle = T.wall; r.fillRect(0, GROUND_Y - 70, W, 70);
     r.fillStyle = 'rgba(255,255,255,0.06)'; r.fillRect(0, GROUND_Y - 70, W, 4);
@@ -719,7 +786,7 @@ function buildStage(name) {
     for (let x = 20; x < W; x += 64) { r.moveTo(x, GROUND_Y - 112); r.lineTo(x, GROUND_Y - 70); }
     r.stroke();
     // AC units on the parapet
-    [[330, 60], [860, 80]].forEach(([ax, aw]) => {
+    [[Math.round(W * 0.26), 60], [Math.round(W * 0.67), 80]].forEach(([ax, aw]) => {
         r.fillStyle = T.rail; r.fillRect(ax, GROUND_Y - 108, aw, 38);
         r.strokeStyle = 'rgba(0,0,0,0.4)'; r.lineWidth = 2;
         r.beginPath(); r.arc(ax + aw / 2, GROUND_Y - 89, 13, 0, Math.PI * 2); r.stroke();
@@ -729,20 +796,21 @@ function buildStage(name) {
     fg.addColorStop(0, T.floor[0]); fg.addColorStop(1, T.floor[1]);
     r.fillStyle = fg; r.fillRect(0, GROUND_Y, W, H - GROUND_Y);
     r.strokeStyle = 'rgba(255,255,255,0.06)'; r.lineWidth = 2;
-    for (let i = -14; i <= 14; i++) { r.beginPath(); r.moveTo(640 + i * 60, GROUND_Y); r.lineTo(640 + i * 140, H); r.stroke(); }
+    for (let i = -20; i <= 20; i++) { r.beginPath(); r.moveTo(W / 2 + i * 60, GROUND_Y); r.lineTo(W / 2 + i * 140, H); r.stroke(); }
     [8, 20, 36, 58, 86].forEach(d => { r.beginPath(); r.moveTo(0, GROUND_Y + d); r.lineTo(W, GROUND_Y + d); r.stroke(); });
-    const sheen = r.createRadialGradient(640, GROUND_Y + 40, 10, 640, GROUND_Y + 40, 600);
+    const sheen = r.createRadialGradient(W / 2, GROUND_Y + 40, 10, W / 2, GROUND_Y + 40, W * 0.47);
     sheen.addColorStop(0, name === 'neon' ? 'rgba(255,0,120,0.12)' : name === 'undead' ? 'rgba(110,255,80,0.10)' : 'rgba(255,100,0,0.14)'); sheen.addColorStop(1, 'rgba(0,0,0,0)');
     r.fillStyle = sheen; r.fillRect(0, GROUND_Y, W, H - GROUND_Y);
     r.shadowColor = T.edge; r.shadowBlur = 16; r.fillStyle = T.edge; r.fillRect(0, GROUND_Y, W, 4); r.shadowBlur = 0;
 
     return { sky, far, near, roof, signs, T, name };
 }
-const STAGES = { neon: buildStage('neon'), storm: buildStage('storm'), undead: buildStage('undead') };
+let STAGES = {};
+function rebuildStages() { STAGES = { neon: buildStage('neon'), storm: buildStage('storm'), undead: buildStage('undead') }; }
 
 // Animated stage weather
 const weather = { rain: [], splashes: [], embers: [], lightning: 0, bolt: null, nextBolt: 240 };
-for (let i = 0; i < 170; i++) weather.rain.push({ x: Math.random() * 1400, y: Math.random() * H, len: rand(12, 24), spd: rand(14, 22) });
+for (let i = 0; i < 220; i++) weather.rain.push({ x: Math.random() * (W_MAX + 200), y: Math.random() * H, len: rand(12, 24), spd: rand(14, 22) });
 for (let i = 0; i < 80; i++) weather.embers.push({ x: Math.random() * W, y: Math.random() * H, vx: rand(-0.4, 0.4), vy: rand(-2.2, -0.6), r: rand(1, 3) });
 
 function tickWeather() {
@@ -751,7 +819,7 @@ function tickWeather() {
             d.y += d.spd; d.x -= d.spd * 0.25;
             if (d.y > GROUND_Y + Math.random() * 110) {
                 if (Math.random() < 0.3) weather.splashes.push({ x: d.x, y: d.y, life: 1 });
-                d.y = -Math.random() * 200; d.x = Math.random() * 1400;
+                d.y = -Math.random() * 200; d.x = Math.random() * (W + 200);
             }
         }
         for (let i = weather.splashes.length - 1; i >= 0; i--) if ((weather.splashes[i].life -= 0.1) <= 0) weather.splashes.splice(i, 1);
@@ -764,7 +832,7 @@ function tickWeather() {
         if (--weather.nextBolt <= 0) {
             weather.nextBolt = 220 + Math.random() * 320;
             weather.lightning = 1;
-            const pts = []; let x = rand(200, 1100), y = 0;
+            const pts = []; let x = rand(200, W - 200), y = 0;
             while (y < 400) { pts.push([x, y]); x += rand(-45, 45); y += rand(25, 55); }
             weather.bolt = pts;
             audio.thunder();
@@ -805,7 +873,7 @@ function drawStageBack(camX) {
     // Antenna beacon
     if (Math.floor(G.frame / 30) % 2 === 0) {
         ctx.save(); ctx.fillStyle = '#ff2020'; ctx.shadowColor = '#ff2020'; ctx.shadowBlur = 16;
-        ctx.beginPath(); ctx.arc(1180, 398, 6, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+        ctx.beginPath(); ctx.arc(W - 100, 398, 6, 0, Math.PI * 2); ctx.fill(); ctx.restore();
     }
 }
 
@@ -1127,7 +1195,7 @@ class Fighter {
         this.stats = Object.assign({}, NO_STATS, o.gear ? o.gear.stats : {});
         this.A = Object.assign({}, ARCH[arch], o.gear ? o.gear.palette : {}, o.palette || {}, o.name ? { name: o.name } : {});
         this.maxHp = o.hp || MAX_HP; this.dmgMult = o.dmg || 1; this.speedMult = o.speed || 1;
-        this.reset(idx === 0 ? 320 : 960);
+        this.reset(idx === 0 ? W * 0.25 : W * 0.75);
     }
     reset(x) {
         Object.assign(this, {
@@ -1487,7 +1555,7 @@ class Horde {
     plannedHp(i) { return (this.L === 50 && i === this.total - 1) ? 140 : 70 - (this.L - ZOMBIE_START) * 2; }
     reset() {
         Object.assign(this, { zombies: [], spawned: 0, killed: 0, spawnT: 20, isDead: false, hp: this.maxHp, state: 'idle', stateTimer: 0,
-            x: 960, y: GROUND_Y, facing: -1, flash: 0, superPhase: null, isGrounded: true, combo: 0, comboTimer: 0, immune: 0 });
+            x: W * 0.75, y: GROUND_Y, facing: -1, flash: 0, superPhase: null, isGrounded: true, combo: 0, comboTimer: 0, immune: 0 });
     }
     block() { } unblock() { }
     attackers() { return this.zombies.filter(z => z.state === 'windup' || z.state === 'attack').length; }
@@ -1789,7 +1857,7 @@ function startRound() {
     const lv = G.mode === 'levels';
     const zombies = lv && G.level >= ZOMBIE_START;
     G.stage = G.final ? 'storm' : zombies ? 'undead' : (lv && G.ai.boss) ? 'storm' : 'neon';
-    player1.reset(320); player2.reset(960);
+    player1.reset(Math.round(W * 0.25)); player2.reset(Math.round(W * 0.75));
     if (G.final) { player1.super = 100; player2.super = 100; }
     G.timer = G.final ? 60 : 99; G.timerF = 0;
     projectiles = []; fx = [];
@@ -2299,6 +2367,8 @@ document.addEventListener('visibilitychange', () => {
     else if (!G.paused) audio.resume();
 });
 
+fit();
+rebuildStages();
 setupTouch();
 loadProgress();
 updateCoinsUI();

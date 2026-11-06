@@ -17,7 +17,9 @@ A best-of-3 rooftop arcade fighter in a single HTML file. No build step and no d
 | Super (full meter) | T | I / Num 0 |
 | Pause | P / Esc | P / Esc |
 
-On phones and tablets, touch controls appear during VS CPU matches.
+On phones and tablets, touch controls appear during VS CPU and Levels matches.
+
+**Fits any screen:** the arena takes the shape of the device. Wide phones in landscape get a wider arena with no black bars, tablets and 16:10 laptops get a narrower one, and phones held upright show the arena on top with large touch controls underneath. Rotating the device switches the layout instantly.
 
 ## Rules
 
