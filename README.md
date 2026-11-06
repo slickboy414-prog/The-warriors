@@ -46,15 +46,16 @@ On phones and tablets, touch controls appear during VS CPU and Levels matches.
 
 ## Coins and shop
 
-- Earn coins for every round you win: 10 per round, more on higher levels, +5 for a perfect round.
-- Match wins pay a bonus. Clearing a level for the first time pays +25, or +75 for a boss level.
-- Spend coins in the **SHOP** (main menu, level select or results screen).
-- **Weapons** (per fighter) look different and give small boosts:
-  - Pyro: Brass Knuckles, Magma Gauntlets, Dragon Claws
-  - Valkyrie: Twin Daggers, Plasma Katana, Void Lance
-- **Attire** (per fighter) is cosmetic: new colours plus hoods, capes, crowns, a winged helm, Phoenix wings or a Ghost aura.
+- Earn coins for every round you win: 10 per round, more on higher levels, +5 for a perfect round. Match wins, first-time level clears (+25, or +75 for a boss) and daily missions pay extra.
+- Spend coins in the **SHOP** (main menu, level select or results screen). It has **Weapons** and **Attire** tabs and 39 items across the three fighters (6 weapons and 7 outfits each).
+- Every item has a rarity: **Common** (free), **Rare**, **Epic** (1,000+ coins) and **Legendary**. Legendary items cost 5,000–6,500 coins *and* need an achievement before they can be bought:
+  - Pyro: Sunfire Gauntlets (earn 120 ★), Solar God (7-day mission streak)
+  - Valkyrie: Starfall Edge (clear level 50), Seraph (earn 120 ★)
+  - Titan: Worldbreaker (earn 140 ★), Ancient King (7-day mission streak)
+- **Weapons** look different and give small boosts (up to +3 punch, +2 kick, +3 Blast and extra reach on Legendary weapons).
+- **Attire** is cosmetic: new colours plus hoods, capes, crowns, a winged helm, demon horns, fox ears, halos, Phoenix wings or a glowing aura.
 - The shop preview shows your fighter wearing whatever you hover or tap. On touch screens, tap once to preview and tap again to buy.
-- Coins, purchases and equipped gear save with your level progress.
+- Coins, purchases and equipped gear save with your level progress. Items bought before a price change stay owned.
 
 ## Unlockable fighter: TITAN
 

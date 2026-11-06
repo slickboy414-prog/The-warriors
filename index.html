@@ -217,6 +217,16 @@ body { font-family: 'Impact', 'Arial Black', sans-serif; color: #fff; }
 .pv-name { font-size: 26px; letter-spacing: 3px; }
 .pv-sub { font: 13px Arial, sans-serif; color: #aaa; letter-spacing: 1px; margin-top: 4px; text-align: center; padding: 0 12px; }
 .shop-lists { flex: 1; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.shop-tabs { display: flex; gap: 10px; }
+.shop-tabs button { background: #10101c; color: #888; border: 2px solid #2c2c44; font: 20px Impact, 'Arial Black', sans-serif; letter-spacing: 2px; padding: 6px 18px; cursor: pointer; transform: skewX(-8deg); }
+.shop-tabs button small { font: 11px Arial, sans-serif; letter-spacing: 1px; color: #777; margin-left: 6px; }
+.shop-tabs button.on { color: #00f0ff; border-color: #00f0ff; box-shadow: 0 0 12px rgba(0,240,255,.4); }
+.shop-card .tier { font: 10px Arial, sans-serif; letter-spacing: 2px; font-weight: bold; }
+.shop-card.rare { border-color: #1f5fa8; } .shop-card.rare .tier { color: #4da6ff; }
+.shop-card.epic { border-color: #6a2fb0; background: linear-gradient(180deg, #170f2a, #10101c); } .shop-card.epic .tier { color: #c98bff; }
+.shop-card.legendary { border-color: #b38600; background: linear-gradient(180deg, #2a2108, #10101c); box-shadow: 0 0 12px rgba(255,204,0,.25); } .shop-card.legendary .tier { color: #ffcc00; }
+.shop-card.common .tier { color: #888; }
+.shop-card .act.locked { background: #1d1a10; color: #c9a227; font: 12px Arial, sans-serif; letter-spacing: 0; line-height: 1.3; }
 .shop-sec { font-size: 22px; letter-spacing: 3px; color: #00f0ff; display: flex; align-items: baseline; gap: 12px; }
 .shop-sec small { font: 12px Arial, sans-serif; color: #888; letter-spacing: 1px; }
 .shop-row { display: grid; gap: 10px; }
@@ -460,10 +470,12 @@ kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px soli
                 <div class="pv-sub" id="pv-sub"></div>
             </div>
             <div class="shop-lists">
-                <div class="shop-sec">WEAPONS <small>Small damage and reach boosts</small></div>
+                <div class="shop-tabs">
+                    <button id="tab-weapons" class="on" onclick="shopTab('weapons')">WEAPONS <small>damage &amp; reach</small></button>
+                    <button id="tab-attire" onclick="shopTab('attire')">ATTIRE <small>looks only</small></button>
+                </div>
                 <div class="shop-row r4" id="shop-weapons"></div>
-                <div class="shop-sec">ATTIRE <small>Looks only</small></div>
-                <div class="shop-row r5" id="shop-attire"></div>
+                <div class="shop-row r4 hidden" id="shop-attire"></div>
                 <div class="shop-foot">
                     <button class="btn alt" onclick="closeShop()">BACK</button>
                     <span id="shop-msg" aria-live="polite"></span>
@@ -547,31 +559,39 @@ const SHOP = {
     brawler: {
         weapons: [
             { id: 'fists', name: 'BARE FISTS', price: 0, desc: 'The classic. No bonus.' },
-            { id: 'knuckles', name: 'BRASS KNUCKLES', price: 120, desc: 'Punch +1 damage', stats: { punch: 1 } },
-            { id: 'magma', name: 'MAGMA GAUNTLETS', price: 300, desc: 'Punch +2 damage. Bigger Blast.', stats: { punch: 2, blastR: 6 } },
-            { id: 'claws', name: 'DRAGON CLAWS', price: 800, desc: 'Punch +2, Kick +1, Blast +2, extra reach', stats: { punch: 2, kick: 1, blast: 2, range: 6 } }
+            { id: 'knuckles', name: 'BRASS KNUCKLES', price: 180, desc: 'Punch +1 damage', stats: { punch: 1 } },
+            { id: 'magma', name: 'MAGMA GAUNTLETS', price: 450, desc: 'Punch +2 damage. Bigger Blast.', stats: { punch: 2, blastR: 6 } },
+            { id: 'claws', name: 'DRAGON CLAWS', price: 1200, desc: 'Punch +2, Kick +1, Blast +2, extra reach', stats: { punch: 2, kick: 1, blast: 2, range: 6 } },
+            { id: 'volcano', name: 'VOLCANO FISTS', price: 2200, desc: 'Punch +3, Blast +2, huge Blast', stats: { punch: 3, blast: 2, blastR: 8 } },
+            { id: 'sunfire', name: 'SUNFIRE GAUNTLETS', price: 5000, req: { stars: 120 }, desc: 'Punch +3, Kick +2, Blast +3, more reach', stats: { punch: 3, kick: 2, blast: 3, range: 8 } }
         ],
         attire: [
             { id: 'classic', name: 'CLASSIC', price: 0, desc: 'Original fire gi', palette: {} },
-            { id: 'street', name: 'STREET HOODIE', price: 80, desc: 'Rooftop street style', palette: { color: '#2f6bff', dark: '#1a3a8f', accent: '#ffffff' }, acc: 'hood' },
-            { id: 'lavacape', name: 'LAVA CAPE', price: 200, desc: 'Flowing molten cape', palette: { color: '#b3001e', dark: '#5c0010', accent: '#ff9900' }, acc: 'cape', cape: '#ff5500' },
-            { id: 'champion', name: 'GOLD CHAMPION', price: 500, desc: 'Crowned in gold', palette: { color: '#ffc400', dark: '#a87400', accent: '#ffffff' }, acc: 'crown' },
-            { id: 'phoenix', name: 'PHOENIX', price: 900, desc: 'Wings of living fire', palette: { color: '#fff1d6', dark: '#ff7a00', accent: '#ff3b00' }, acc: 'wings' }
+            { id: 'street', name: 'STREET HOODIE', price: 120, desc: 'Rooftop street style', palette: { color: '#2f6bff', dark: '#1a3a8f', accent: '#ffffff' }, acc: 'hood' },
+            { id: 'lavacape', name: 'LAVA CAPE', price: 300, desc: 'Flowing molten cape', palette: { color: '#b3001e', dark: '#5c0010', accent: '#ff9900' }, acc: 'cape', cape: '#ff5500' },
+            { id: 'champion', name: 'GOLD CHAMPION', price: 750, desc: 'Crowned in gold', palette: { color: '#ffc400', dark: '#a87400', accent: '#ffffff' }, acc: 'crown' },
+            { id: 'phoenix', name: 'PHOENIX', price: 1350, desc: 'Wings of living fire', palette: { color: '#fff1d6', dark: '#ff7a00', accent: '#ff3b00' }, acc: 'wings' },
+            { id: 'infernal', name: 'INFERNAL DEMON', price: 2400, desc: 'Blackened gi and burning horns', palette: { color: '#3a0000', dark: '#1a0000', accent: '#ff3b00' }, acc: 'horns' },
+            { id: 'solar', name: 'SOLAR GOD', price: 6000, req: { streak: 7 }, desc: 'Radiant gold with a halo of fire', palette: { color: '#fff7d6', dark: '#d9a400', accent: '#ff7a00' }, acc: 'halo' }
         ]
     },
     blade: {
         weapons: [
             { id: 'blade', name: 'ENERGY BLADE', price: 0, desc: 'The classic. No bonus.' },
-            { id: 'daggers', name: 'TWIN DAGGERS', price: 120, desc: 'Punch +1 damage. Off-hand dagger.', stats: { punch: 1 } },
-            { id: 'katana', name: 'PLASMA KATANA', price: 300, desc: 'Punch +1 damage. Longer reach.', stats: { punch: 1, range: 12 } },
-            { id: 'lance', name: 'VOID LANCE', price: 800, desc: 'Punch +2, Kick +1, Blast +2, long reach', stats: { punch: 2, kick: 1, blast: 2, range: 18 } }
+            { id: 'daggers', name: 'TWIN DAGGERS', price: 180, desc: 'Punch +1 damage. Off-hand dagger.', stats: { punch: 1 } },
+            { id: 'katana', name: 'PLASMA KATANA', price: 450, desc: 'Punch +1 damage. Longer reach.', stats: { punch: 1, range: 12 } },
+            { id: 'lance', name: 'VOID LANCE', price: 1200, desc: 'Punch +2, Kick +1, Blast +2, long reach', stats: { punch: 2, kick: 1, blast: 2, range: 18 } },
+            { id: 'stormblade', name: 'STORM BLADES', price: 2200, desc: 'Twin lightning blades. Punch +2, Kick +1, Blast +2, reach', stats: { punch: 2, kick: 1, blast: 2, range: 14 } },
+            { id: 'starfall', name: 'STARFALL EDGE', price: 5000, req: { clear: 50 }, desc: 'Punch +3, Kick +2, Blast +3, huge reach', stats: { punch: 3, kick: 2, blast: 3, range: 20 } }
         ],
         attire: [
             { id: 'classic', name: 'CLASSIC', price: 0, desc: 'Original cyber ninja', palette: {} },
-            { id: 'sakura', name: 'SAKURA', price: 80, desc: 'Cherry blossom style', palette: { color: '#ff8fc8', dark: '#b34f86', accent: '#ffffff', scarf: '#ffffff', cap: '#ff4fa3', visor: '#ffffff' }, acc: 'flower' },
-            { id: 'midnight', name: 'MIDNIGHT CAPE', price: 200, desc: 'Shadow cloak of the night', palette: { color: '#3b2a6b', dark: '#1a1035', accent: '#b967ff', scarf: '#b967ff', cap: '#1a1035', visor: '#b967ff' }, acc: 'cape', cape: '#6a2bd9' },
-            { id: 'golden', name: 'GOLDEN VALKYRIE', price: 500, desc: 'Winged golden helm', palette: { color: '#ffd23f', dark: '#a8860b', accent: '#ffffff', scarf: '#ff4040', cap: '#ffd23f', visor: '#ff4040' }, acc: 'helm' },
-            { id: 'ghost', name: 'GHOST CIRCUIT', price: 900, desc: 'Glowing spirit aura', palette: { color: '#e8fbff', dark: '#7ad7ff', accent: '#00f0ff', scarf: '#00f0ff', cap: '#7ad7ff', visor: '#00f0ff' }, acc: 'aura' }
+            { id: 'sakura', name: 'SAKURA', price: 120, desc: 'Cherry blossom style', palette: { color: '#ff8fc8', dark: '#b34f86', accent: '#ffffff', scarf: '#ffffff', cap: '#ff4fa3', visor: '#ffffff' }, acc: 'flower' },
+            { id: 'midnight', name: 'MIDNIGHT CAPE', price: 300, desc: 'Shadow cloak of the night', palette: { color: '#3b2a6b', dark: '#1a1035', accent: '#b967ff', scarf: '#b967ff', cap: '#1a1035', visor: '#b967ff' }, acc: 'cape', cape: '#6a2bd9' },
+            { id: 'golden', name: 'GOLDEN VALKYRIE', price: 750, desc: 'Winged golden helm', palette: { color: '#ffd23f', dark: '#a8860b', accent: '#ffffff', scarf: '#ff4040', cap: '#ffd23f', visor: '#ff4040' }, acc: 'helm' },
+            { id: 'ghost', name: 'GHOST CIRCUIT', price: 1350, desc: 'Glowing spirit aura', palette: { color: '#e8fbff', dark: '#7ad7ff', accent: '#00f0ff', scarf: '#00f0ff', cap: '#7ad7ff', visor: '#00f0ff' }, acc: 'aura' },
+            { id: 'kitsune', name: 'KITSUNE', price: 2400, desc: 'Nine-tailed fox spirit', palette: { color: '#ff8a2a', dark: '#a3450a', accent: '#ffffff', scarf: '#ffffff', cap: '#ff8a2a', visor: '#ffe14a' }, acc: 'ears' },
+            { id: 'seraph', name: 'SERAPH', price: 6000, req: { stars: 120 }, desc: 'Holy white armour with a halo', palette: { color: '#ffffff', dark: '#c9b37a', accent: '#ffd700', scarf: '#ffd700', cap: '#ffffff', visor: '#ffd700' }, acc: 'halo' }
         ]
     }
 };
@@ -579,7 +599,9 @@ const BLADE_LOOK = {
     blade: { len: 58, core: '#bff8ff', glow: '#00f0ff' },
     daggers: { len: 58, core: '#bff8ff', glow: '#00f0ff', offhand: 30 },
     katana: { len: 76, core: '#ffd0f4', glow: '#ff4fd8', guard: true },
-    lance: { len: 92, core: '#e6d0ff', glow: '#b967ff', tip: true }
+    lance: { len: 92, core: '#e6d0ff', glow: '#b967ff', tip: true },
+    stormblade: { len: 82, core: '#e8f6ff', glow: '#7a5cff', offhand: 44 },
+    starfall: { len: 100, core: '#fff7c2', glow: '#ffcc00', tip: true, guard: true }
 };
 const RAGE_FRAMES = 480, RAGE_DMG = 1.3;
 const FIGHTERS = ['brawler', 'blade', 'titan'];
@@ -589,24 +611,40 @@ ARCH.titan = { name: 'TITAN', speed: 3.6, color: '#7d8597', dark: '#3c4250', acc
 SHOP.titan = {
     weapons: [
         { id: 'stone', name: 'STONE FISTS', price: 0, desc: 'The classic. No bonus.' },
-        { id: 'iron', name: 'IRON GAUNTLETS', price: 150, desc: 'Punch +1 damage', stats: { punch: 1 } },
-        { id: 'obsidian', name: 'OBSIDIAN KNUCKLES', price: 350, desc: 'Punch +2 damage. Bigger Quake.', stats: { punch: 2, blastR: 6 } },
-        { id: 'mauls', name: 'COLOSSUS MAULS', price: 900, desc: 'Punch +2, Kick +1, Quake +2, extra reach', stats: { punch: 2, kick: 1, blast: 2, range: 6 } }
+        { id: 'iron', name: 'IRON GAUNTLETS', price: 230, desc: 'Punch +1 damage', stats: { punch: 1 } },
+        { id: 'obsidian', name: 'OBSIDIAN KNUCKLES', price: 520, desc: 'Punch +2 damage. Bigger Quake.', stats: { punch: 2, blastR: 6 } },
+        { id: 'mauls', name: 'COLOSSUS MAULS', price: 1350, desc: 'Punch +2, Kick +1, Quake +2, extra reach', stats: { punch: 2, kick: 1, blast: 2, range: 6 } },
+        { id: 'lavarock', name: 'LAVA ROCK FISTS', price: 2400, desc: 'Punch +3, Quake +2, huge Quake', stats: { punch: 3, blast: 2, blastR: 8 } },
+        { id: 'worldbreaker', name: 'WORLDBREAKER', price: 5500, req: { stars: 140 }, desc: 'Punch +3, Kick +2, Quake +3, more reach', stats: { punch: 3, kick: 2, blast: 3, range: 8 } }
     ],
     attire: [
         { id: 'classic', name: 'CLASSIC', price: 0, desc: 'Original stone colossus', palette: {} },
-        { id: 'jade', name: 'JADE GIANT', price: 100, desc: 'Carved from green jade', palette: { color: '#5f9e7a', dark: '#2d4d3b', accent: '#d8ffb0' } },
-        { id: 'molten', name: 'MOLTEN CORE', price: 250, desc: 'Lava-cracked with a fire cape', palette: { color: '#4a2a24', dark: '#24120e', accent: '#ff6a00' }, acc: 'cape', cape: '#ff4500' },
-        { id: 'golden', name: 'GOLDEN COLOSSUS', price: 550, desc: 'A crowned golden statue', palette: { color: '#d9b13b', dark: '#7a5d12', accent: '#ffffff' }, acc: 'crown' },
-        { id: 'void', name: 'VOID GIANT', price: 1000, desc: 'Starless stone with a glowing aura', palette: { color: '#2a2440', dark: '#120e20', accent: '#b967ff' }, acc: 'aura' }
+        { id: 'jade', name: 'JADE GIANT', price: 150, desc: 'Carved from green jade', palette: { color: '#5f9e7a', dark: '#2d4d3b', accent: '#d8ffb0' } },
+        { id: 'molten', name: 'MOLTEN CORE', price: 380, desc: 'Lava-cracked with a fire cape', palette: { color: '#4a2a24', dark: '#24120e', accent: '#ff6a00' }, acc: 'cape', cape: '#ff4500' },
+        { id: 'golden', name: 'GOLDEN COLOSSUS', price: 830, desc: 'A crowned golden statue', palette: { color: '#d9b13b', dark: '#7a5d12', accent: '#ffffff' }, acc: 'crown' },
+        { id: 'void', name: 'VOID GIANT', price: 1500, desc: 'Starless stone with a glowing aura', palette: { color: '#2a2440', dark: '#120e20', accent: '#b967ff' }, acc: 'aura' },
+        { id: 'crystal', name: 'CRYSTAL GOLEM', price: 2600, desc: 'Living ice crystal with spikes', palette: { color: '#9fe6ff', dark: '#2a6a8a', accent: '#ffffff' }, acc: 'horns' },
+        { id: 'ancient', name: 'ANCIENT KING', price: 6500, req: { streak: 7 }, desc: 'Gold-veined stone, crowned in light', palette: { color: '#c9a24a', dark: '#5a4410', accent: '#38f2c8' }, acc: 'halo' }
     ]
 };
 const TITAN_LOOK = {
     stone: { r: 12, color: '#9aa3b5' },
     iron: { r: 13, color: '#c9d1dc', ring: '#6b7585' },
     obsidian: { r: 14, color: '#2a1f3d', glow: '#b967ff' },
-    mauls: { r: 17, color: '#5a6170', glow: '#38f2c8', ring: '#38f2c8' }
+    mauls: { r: 17, color: '#5a6170', glow: '#38f2c8', ring: '#38f2c8' },
+    lavarock: { r: 17, color: '#3a1200', glow: '#ff5500', ring: '#ff8a00' },
+    worldbreaker: { r: 19, color: '#1a1a2a', glow: '#00f0ff', ring: '#ffffff' }
 };
+// Rarity: free = Common, under 1000 = Rare, 1000+ = Epic, needs an achievement = Legendary
+function itemTier(item) { return item.req ? 'legendary' : item.price === 0 ? 'common' : item.price >= 1000 ? 'epic' : 'rare'; }
+function totalStars() { return Object.values(progress.stars).reduce((a, b) => a + (b | 0), 0); }
+function reqStatus(req) {
+    if (!req) return { met: true };
+    if (req.stars) { const have = totalStars(); return { met: have >= req.stars, text: `Earn ${req.stars} ★`, prog: `${Math.min(have, req.stars)}/${req.stars}` }; }
+    if (req.clear) { const ok = (progress.stars[req.clear] || 0) > 0; return { met: ok, text: `Clear level ${req.clear}`, prog: ok ? 'done' : 'not yet' }; }
+    if (req.streak) { const best = progress.bestStreak || 0; return { met: best >= req.streak, text: `Reach a ${req.streak}-day mission streak`, prog: `best ${Math.min(best, req.streak)}/${req.streak}` }; }
+    return { met: true };
+}
 const FINISHER_NAMES = { phoenix: 'PHOENIX FINISH', cuts: 'THOUSAND CUTS', quake: 'EARTHSHATTER' };
 function titanUnlocked() { return (progress.stars[50] || 0) > 0; }
 function rivalOf(arch, randomize) {
@@ -1272,14 +1310,18 @@ function drawFigure(f, o = {}) {
     }
     const bHand = limb(0, -48, P.aB, 26, 24, (bulky ? 11 : 8) * lw, dark);
     if (titan) { ctx.fillStyle = o.tint || dark; ctx.beginPath(); ctx.arc(bHand.x, bHand.y, (TITAN_LOOK[gear.weapon] || TITAN_LOOK.stone).r - 2, 0, Math.PI * 2); ctx.fill(); }
-    if (bulky && gear.weapon === 'magma') {
-        ctx.fillStyle = o.tint || '#c42800';
-        ctx.beginPath(); ctx.arc(bHand.x, bHand.y, 11, 0, Math.PI * 2); ctx.fill();
+    const backFist = { magma: '#c42800', volcano: '#1a0500', sunfire: '#c9a227' }[gear.weapon];
+    if (bulky && !titan && backFist) {
+        ctx.fillStyle = o.tint || backFist;
+        ctx.beginPath(); ctx.arc(bHand.x, bHand.y, gear.weapon === 'magma' ? 11 : 12, 0, Math.PI * 2); ctx.fill();
     }
-    if (!bulky && gear.weapon === 'daggers') {
+    const offhand = !bulky && (BLADE_LOOK[gear.weapon] || {}).offhand ? BLADE_LOOK[gear.weapon] : null;
+    if (offhand) {
         const ddx = Math.sin(bHand.a), ddy = Math.cos(bHand.a);
-        ctx.strokeStyle = o.tint || '#bff8ff'; ctx.lineWidth = 3;
-        ctx.beginPath(); ctx.moveTo(bHand.x, bHand.y); ctx.lineTo(bHand.x + ddx * 30, bHand.y + ddy * 30); ctx.stroke();
+        ctx.strokeStyle = o.tint || offhand.core; ctx.lineWidth = 3;
+        if (!o.tint) { ctx.shadowColor = offhand.glow; ctx.shadowBlur = 10; }
+        ctx.beginPath(); ctx.moveTo(bHand.x, bHand.y); ctx.lineTo(bHand.x + ddx * offhand.offhand, bHand.y + ddy * offhand.offhand); ctx.stroke();
+        ctx.shadowBlur = 0;
     }
     if (!bulky) { // scarf
         const wv = Math.sin(f.animT * 0.25) * 6;
@@ -1329,6 +1371,18 @@ function drawFigure(f, o = {}) {
     } else if (gear.acc === 'helm') {
         ctx.fillStyle = o.tint || '#ffffff';
         ctx.beginPath(); ctx.moveTo(-8, -74); ctx.lineTo(-30, -92); ctx.lineTo(-22, -78); ctx.lineTo(-32, -80); ctx.lineTo(-10, -66); ctx.closePath(); ctx.fill();
+    } else if (gear.acc === 'horns') { // demon horns / crystal spikes
+        ctx.fillStyle = o.tint || A.accent;
+        for (const sx of [-1, 1]) { ctx.beginPath(); ctx.moveTo(2 + sx * 8, -80); ctx.quadraticCurveTo(2 + sx * 20, -92, 2 + sx * 16, -106); ctx.quadraticCurveTo(2 + sx * 12, -92, 2 + sx * 2, -82); ctx.fill(); }
+    } else if (gear.acc === 'ears') { // fox ears
+        for (const sx of [-1, 1]) {
+            ctx.fillStyle = o.tint || A.color; ctx.beginPath(); ctx.moveTo(2 + sx * 4, -80); ctx.lineTo(2 + sx * 13, -100); ctx.lineTo(2 + sx * 15, -76); ctx.fill();
+            if (!o.tint) { ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.moveTo(2 + sx * 7, -80); ctx.lineTo(2 + sx * 12, -93); ctx.lineTo(2 + sx * 13, -79); ctx.fill(); }
+        }
+    } else if (gear.acc === 'halo') { // glowing halo
+        ctx.strokeStyle = o.tint || '#ffd700'; ctx.lineWidth = 4;
+        if (!o.tint) { ctx.shadowColor = '#ffd700'; ctx.shadowBlur = 18; }
+        ctx.beginPath(); ctx.ellipse(2, -96 + Math.sin(f.animT * 0.08) * 2, 18, 5, 0, 0, Math.PI * 2); ctx.stroke(); ctx.shadowBlur = 0;
     } else if (gear.acc === 'flower' && !o.tint) {
         for (let i = 0; i < 5; i++) { const a = i / 5 * Math.PI * 2; ctx.fillStyle = '#ffd1ea'; ctx.beginPath(); ctx.arc(-9 + Math.cos(a) * 4, -78 + Math.sin(a) * 4, 3, 0, Math.PI * 2); ctx.fill(); }
         ctx.fillStyle = '#ffcc00'; ctx.beginPath(); ctx.arc(-9, -78, 2, 0, Math.PI * 2); ctx.fill();
@@ -1340,15 +1394,22 @@ function drawFigure(f, o = {}) {
         ctx.beginPath(); ctx.arc(hand.x, hand.y, tw.r, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
         if (!o.tint && tw.ring) { ctx.strokeStyle = tw.ring; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(hand.x, hand.y, tw.r - 2, 0, Math.PI * 2); ctx.stroke(); }
     } else if (bulky) {
-        const glow = f.state === 'special' || f.state === 'super' || f.state === 'punch' || gear.weapon === 'magma';
-        const r = gear.weapon === 'magma' ? 13 : 9;
-        ctx.fillStyle = o.tint || (gear.weapon === 'magma' ? '#ff3b00' : glow ? '#ffcc00' : col);
-        if (glow && !o.tint) { ctx.shadowColor = '#ff8800'; ctx.shadowBlur = 20; }
+        const hot = { magma: '#ff3b00', volcano: '#2a0a00', sunfire: '#fff3c2' }[gear.weapon];
+        const glow = f.state === 'special' || f.state === 'super' || f.state === 'punch' || !!hot;
+        const r = { magma: 13, volcano: 14, sunfire: 14 }[gear.weapon] || 9;
+        ctx.fillStyle = o.tint || (hot || (glow ? '#ffcc00' : col));
+        if (glow && !o.tint) { ctx.shadowColor = gear.weapon === 'sunfire' ? '#ffcc00' : gear.weapon === 'volcano' ? '#ff3300' : '#ff8800'; ctx.shadowBlur = gear.weapon === 'sunfire' ? 28 : 20; }
         ctx.beginPath(); ctx.arc(hand.x, hand.y, r, 0, Math.PI * 2); ctx.fill();
         ctx.shadowBlur = 0;
         if (gear.weapon === 'knuckles') {
             ctx.strokeStyle = o.tint || '#ffd700'; ctx.lineWidth = 4;
             const c = Math.PI / 2 - hand.a; ctx.beginPath(); ctx.arc(hand.x, hand.y, 9, c - 1.2, c + 1.2); ctx.stroke();
+        } else if (gear.weapon === 'volcano' && !o.tint) { // cracked lava fist
+            ctx.strokeStyle = '#ff8a00'; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.arc(hand.x, hand.y, 12, 0, Math.PI * 2); ctx.moveTo(hand.x - 6, hand.y - 3); ctx.lineTo(hand.x + 2, hand.y + 2); ctx.lineTo(hand.x + 6, hand.y - 5); ctx.stroke();
+        } else if (gear.weapon === 'sunfire' && !o.tint) { // sun rays
+            ctx.strokeStyle = '#ffcc00'; ctx.lineWidth = 2.5;
+            for (let k = 0; k < 8; k++) { const a = k / 8 * Math.PI * 2 + f.animT * 0.05; ctx.beginPath(); ctx.moveTo(hand.x + Math.cos(a) * 16, hand.y + Math.sin(a) * 16); ctx.lineTo(hand.x + Math.cos(a) * 24, hand.y + Math.sin(a) * 24); ctx.stroke(); }
         } else if (gear.weapon === 'claws') {
             ctx.strokeStyle = o.tint || '#e8f6ff'; ctx.lineWidth = 3;
             if (!o.tint) { ctx.shadowColor = '#00f0ff'; ctx.shadowBlur = 10; }
@@ -2330,6 +2391,7 @@ function mergeProgress(str) {
             if (d.tutorialDone) progress.tutorialDone = true;
             if (d.titanSeen) progress.titanSeen = true;
             progress.daily = cleanDaily(d.daily);
+            progress.bestStreak = clamp(d.bestStreak | 0, 0, 9999);
         }
         updateCoinsUI();
     } catch (e) { /* ignore bad save */ }
@@ -2467,6 +2529,13 @@ function updatePreviewLabel() {
     $('pv-name').style.color = ARCH[shopArch].hud;
     $('pv-sub').textContent = `${lo.wName} • ${lo.aName}`;
 }
+let shopKind = 'weapons';
+function shopTab(kind) {
+    shopKind = kind;
+    $('tab-weapons').classList.toggle('on', kind === 'weapons'); $('tab-attire').classList.toggle('on', kind === 'attire');
+    $('shop-weapons').classList.toggle('hidden', kind !== 'weapons'); $('shop-attire').classList.toggle('hidden', kind !== 'attire');
+    shopHover = null; updatePreviewLabel();
+}
 function renderShop() {
     for (const a of FIGHTERS) $('shop-pick-' + a).classList.toggle('on', shopArch === a);
     updateCoinsUI(); updatePreviewLabel();
@@ -2476,15 +2545,17 @@ function renderShop() {
         for (const item of SHOP[shopArch][kind]) {
             const own = owns(shopArch, kind, item.id), eq = equipped(shopArch, kind) === item.id;
             const b = document.createElement('button');
-            b.className = 'shop-card' + (eq ? ' equipped' : '');
+            const tier = itemTier(item), rq = reqStatus(item.req);
+            b.className = 'shop-card ' + tier + (eq ? ' equipped' : '');
             const pal = Object.assign({}, ARCH[shopArch], item.palette || {});
             const sw = kind === 'attire' ? `<div class="sw"><i style="background:${pal.color}"></i><i style="background:${pal.dark}"></i><i style="background:${pal.accent}"></i>${item.cape ? `<i style="background:${item.cape}"></i>` : ''}</div>` : '';
             let act;
             if (eq) act = '<div class="act eq">EQUIPPED</div>';
             else if (own) act = '<div class="act">EQUIP</div>';
+            else if (!rq.met) act = `<div class="act locked">🔒 ${rq.text} (${rq.prog})<br><span class="coin" style="width:10px;height:10px"></span> ${item.price}</div>`;
             else if (progress.coins >= item.price) act = `<div class="act buy">BUY <span class="coin"></span> ${item.price}</div>`;
             else act = `<div class="act poor"><span class="coin"></span> ${item.price}</div>`;
-            b.innerHTML = `<div class="nm">${item.name}</div>${sw}<div class="ds">${item.desc}</div>${act}`;
+            b.innerHTML = `<div class="tier">${tier.toUpperCase()}</div><div class="nm">${item.name}</div>${sw}<div class="ds">${item.desc}</div>${act}`;
             b.setAttribute('aria-label', `${item.name}: ${item.desc}. ${eq ? 'Equipped' : own ? 'Owned' : item.price + ' coins'}`);
             const preview = () => { shopHover = { [kind]: item.id }; updatePreviewLabel(); };
             const unpreview = () => { shopHover = null; updatePreviewLabel(); };
@@ -2505,6 +2576,8 @@ function shopAct(kind, item) {
             shopMsg(`Tap again to buy ${item.name} for ${item.price} coins.`);
             return;
         }
+        const rq = reqStatus(item.req);
+        if (!rq.met) { shopMsg(`${item.name} is Legendary: ${rq.text} to unlock it (${rq.prog}).`); audio.block(); return; }
         if (progress.coins < item.price) {
             shopMsg(`You need ${item.price - progress.coins} more coins. Win rounds to earn them.`);
             audio.block();
@@ -2663,6 +2736,7 @@ function missionEvent(id, amount = 1) {
     }
     if (changed && !D.bonusPaid && D.missions.every(m => m.done)) {
         D.streak = D.lastAllDate === yesterdayKey() ? D.streak + 1 : 1;
+        progress.bestStreak = Math.max(progress.bestStreak || 0, D.streak);
         D.lastAllDate = D.date; D.bonusPaid = true;
         const bonus = streakBonus(D.streak);
         progress.coins += bonus; G.matchCoins = (G.matchCoins || 0) + bonus;
