@@ -79,6 +79,17 @@ body { font-family: 'Impact', 'Arial Black', sans-serif; color: #fff; }
 #result-line { font-size: 30px; letter-spacing: 3px; color: #ffcc00; text-shadow: 0 0 14px rgba(255,204,0,.6); margin-bottom: 14px; min-height: 0; }
 .select-grid { display: flex; gap: 30px; margin-bottom: 26px; }
 .char-card { width: 190px; height: 240px; border: 3px solid #333; background: #111; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 14px; cursor: pointer; transition: all .2s; transform: skewX(-5deg); }
+.char-card.locked { cursor: not-allowed; }
+.char-card.locked .char-avatar, .char-card.locked .char-name { filter: grayscale(1) brightness(.35); }
+.char-card.locked .char-desc { display: none; }
+.lock-note { display: none; font: 12px Arial, sans-serif; color: #ffcc00; letter-spacing: 1px; text-align: center; line-height: 1.5; }
+.char-card.locked .lock-note { display: block; }
+.char-card.newfighter::after { content: 'NEW'; position: absolute; top: -12px; right: 8px; font: 13px Impact, 'Arial Black', sans-serif; letter-spacing: 1px; color: #001a14; background: #38f2c8; padding: 2px 7px; box-shadow: 0 0 12px #38f2c8; }
+.char-card { position: relative; }
+.char-card.shake { animation: cardshake .3s; }
+@keyframes cardshake { 25% { margin-left: -8px; } 75% { margin-left: 8px; } }
+.unlock-line { display: inline-block; margin-top: 8px; font: 26px Impact, 'Arial Black', sans-serif; letter-spacing: 2px; color: #7dffdf; text-shadow: 0 0 14px #38f2c8; }
+.lv-pick button:disabled { opacity: .45; cursor: not-allowed; }
 .char-card:hover, .char-card.selected { border-color: #00f0ff; box-shadow: 0 0 20px #00f0ff; transform: skewX(-5deg) scale(1.05); }
 .char-avatar { width: 100px; height: 120px; display: flex; align-items: center; justify-content: center; }
 .btn-group { display: flex; gap: 22px; margin-bottom: 18px; }
@@ -213,11 +224,11 @@ body { font-family: 'Impact', 'Arial Black', sans-serif; color: #fff; }
 #help-btn:hover, #help-btn:focus-visible { border-color: #00f0ff; box-shadow: 0 0 16px #00f0ff; outline: none; transform: scale(1.08); }
 #help-btn svg { width: 32px; height: 32px; }
 #help-screen { z-index: 20; }
-.help-title { font-size: 54px; letter-spacing: 5px; color: #fff; text-shadow: 0 0 20px #00f0ff; margin-bottom: 18px; }
+.help-title { font-size: 50px; letter-spacing: 5px; color: #fff; text-shadow: 0 0 20px #00f0ff; margin-bottom: 8px; }
 .ctl-table { border-collapse: collapse; font-family: Arial, sans-serif; font-size: 18px; margin-bottom: 14px; }
 .ctl-table th { font-family: Impact, 'Arial Black', sans-serif; font-weight: normal; letter-spacing: 2px; font-size: 22px; padding: 6px 26px; }
 .ctl-table th.p1c { color: #00f0ff; } .ctl-table th.p2c { color: #ff0055; }
-.ctl-table td { padding: 6px 26px; border-top: 1px solid rgba(255,255,255,.12); color: #ddd; text-align: center; }
+.ctl-table td { padding: 4px 26px; border-top: 1px solid rgba(255,255,255,.12); color: #ddd; text-align: center; }
 .ctl-table td:first-child { text-align: left; color: #ffcc00; letter-spacing: 1px; }
 .ctl-table td.super-row-c { color: #ff4d8d; font-weight: bold; }
 kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px solid #777; border-bottom-width: 3px; border-radius: 5px; background: #1a1a2a; font-family: monospace; font-size: 16px; color: #fff; }
@@ -243,7 +254,8 @@ kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px soli
 #stage.tall .shop-head { width: 680px; flex-wrap: wrap; gap: 12px 22px; }
 #stage.tall .shop-body { width: 680px; flex-direction: column; gap: 16px; }
 #stage.tall .shop-preview { width: 680px; height: auto; padding: 6px 0 12px; }
-#stage.tall #shop-canvas { width: 214px; height: 300px; }
+#stage.tall #shop-canvas { width: 193px; height: 270px; }
+#stage.tall .shop-card { height: 146px; }
 #stage.tall .shop-row.r4 { grid-template-columns: repeat(2, 1fr); }
 #stage.tall .shop-row.r5 { grid-template-columns: repeat(3, 1fr); }
 #stage.tall .tb { width: calc(var(--cell) - 10px); height: calc(var(--cell) - 10px); font-size: 26px; }
@@ -339,6 +351,20 @@ kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px soli
                 <div style="font-size:22px;color:#00f0ff">VALKYRIE</div>
                 <div style="font-size:11px;font-family:sans-serif;color:#aaa;text-align:center">Cyber ninja. Fast &amp; agile.<br>Super: <b style="color:#ffcc00">PHANTOM RUSH</b></div>
             </div>
+            <div class="char-card locked" id="card-titan" onclick="selectChar('titan')">
+                <div class="char-avatar">
+                    <svg width="86" height="104" viewBox="0 0 100 120">
+                        <rect x="27" y="44" width="46" height="48" rx="6" fill="#7d8597"/>
+                        <rect x="20" y="42" width="16" height="12" fill="#3c4250"/><rect x="64" y="42" width="16" height="12" fill="#3c4250"/>
+                        <circle cx="50" cy="28" r="17" fill="#3c4250"/><rect x="50" y="24" width="15" height="5" fill="#38f2c8"/>
+                        <circle cx="16" cy="76" r="10" fill="#9aa3b5"/><circle cx="84" cy="76" r="10" fill="#9aa3b5"/>
+                        <path d="M44 56 L52 68 L47 78" stroke="#38f2c8" stroke-width="2" fill="none"/>
+                    </svg>
+                </div>
+                <div class="char-name" style="font-size:22px;color:#7dffdf">TITAN</div>
+                <div class="char-desc" style="font-size:11px;font-family:sans-serif;color:#aaa;text-align:center">Stone colossus. Slow &amp; mighty.<br>Super: <b style="color:#ffcc00">TITAN CRUSH</b></div>
+                <div class="lock-note" id="titan-lock">&#128274; CLEAR ALL 50 LEVELS</div>
+            </div>
         </div>
         <div class="btn-group">
             <button class="btn" onclick="openLevels()">LEVELS</button>
@@ -363,6 +389,7 @@ kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px soli
         <div class="lv-pick">YOUR FIGHTER
             <button id="lv-pick-brawler" onclick="selectChar('brawler'); renderLevels()">PYRO</button>
             <button id="lv-pick-blade" onclick="selectChar('blade'); renderLevels()">VALKYRIE</button>
+            <button id="lv-pick-titan" onclick="selectChar('titan'); renderLevels()">TITAN</button>
         </div>
         <div class="lv-grid" id="lv-grid"></div>
         <div class="btn-group">
@@ -404,6 +431,7 @@ kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px soli
             <div class="lv-pick">FIGHTER
                 <button id="shop-pick-brawler" onclick="shopPick('brawler')">PYRO</button>
                 <button id="shop-pick-blade" onclick="shopPick('blade')">VALKYRIE</button>
+                <button id="shop-pick-titan" onclick="shopPick('titan')">TITAN</button>
             </div>
             <div class="coin-pill"><span class="coin"></span><span id="shop-coin-n">0</span></div>
         </div>
@@ -452,6 +480,7 @@ kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px soli
             <b>Touch:</b> left pad moves, jumps and blocks &bull; right buttons are Punch, Kick, Blast and Super<br>
             <b>Jump kick:</b> press Kick in the air &bull; <b>Counter:</b> hit an opponent mid-attack for +25% damage<br>
             Best of 3 &bull; at 1&ndash;1 the Final Round moves to the burning arena with full Supers and a 60s clock<br>
+            <b>Titan:</b> clear all 50 levels to unlock a third fighter &bull; his Quake rolls along the floor (jump it!)<br>
             <b>Coins:</b> win rounds and matches to earn coins &bull; spend them in the SHOP on weapons and attire<br>
             <b>Levels:</b> 50 stages vs an improving CPU &bull; boss every 10th level &bull; levels 41&ndash;50 are zombie hordes &bull; &#9733; win, &#9733;&#9733; win 2&ndash;0, &#9733;&#9733;&#9733; win 2&ndash;0 above half health
         </div>
@@ -535,6 +564,40 @@ const BLADE_LOOK = {
     lance: { len: 92, core: '#e6d0ff', glow: '#b967ff', tip: true }
 };
 const RAGE_FRAMES = 480, RAGE_DMG = 1.3;
+const FIGHTERS = ['brawler', 'blade', 'titan'];
+ARCH.titan = { name: 'TITAN', speed: 3.6, color: '#7d8597', dark: '#3c4250', accent: '#38f2c8', proj: 'quake', superName: 'TITAN CRUSH', hud: '#7dffdf',
+               hp: 115, power: 1.1, heavy: true,   // slow, tough, hits hard, half knockback
+               alt: { color: '#9a7d5a', dark: '#4e3c28', accent: '#ffb347', hud: '#ffcc88' } };
+SHOP.titan = {
+    weapons: [
+        { id: 'stone', name: 'STONE FISTS', price: 0, desc: 'The classic. No bonus.' },
+        { id: 'iron', name: 'IRON GAUNTLETS', price: 150, desc: 'Punch +1 damage', stats: { punch: 1 } },
+        { id: 'obsidian', name: 'OBSIDIAN KNUCKLES', price: 350, desc: 'Punch +2 damage. Bigger Quake.', stats: { punch: 2, blastR: 6 } },
+        { id: 'mauls', name: 'COLOSSUS MAULS', price: 900, desc: 'Punch +2, Kick +1, Quake +2, extra reach', stats: { punch: 2, kick: 1, blast: 2, range: 6 } }
+    ],
+    attire: [
+        { id: 'classic', name: 'CLASSIC', price: 0, desc: 'Original stone colossus', palette: {} },
+        { id: 'jade', name: 'JADE GIANT', price: 100, desc: 'Carved from green jade', palette: { color: '#5f9e7a', dark: '#2d4d3b', accent: '#d8ffb0' } },
+        { id: 'molten', name: 'MOLTEN CORE', price: 250, desc: 'Lava-cracked with a fire cape', palette: { color: '#4a2a24', dark: '#24120e', accent: '#ff6a00' }, acc: 'cape', cape: '#ff4500' },
+        { id: 'golden', name: 'GOLDEN COLOSSUS', price: 550, desc: 'A crowned golden statue', palette: { color: '#d9b13b', dark: '#7a5d12', accent: '#ffffff' }, acc: 'crown' },
+        { id: 'void', name: 'VOID GIANT', price: 1000, desc: 'Starless stone with a glowing aura', palette: { color: '#2a2440', dark: '#120e20', accent: '#b967ff' }, acc: 'aura' }
+    ]
+};
+const TITAN_LOOK = {
+    stone: { r: 12, color: '#9aa3b5' },
+    iron: { r: 13, color: '#c9d1dc', ring: '#6b7585' },
+    obsidian: { r: 14, color: '#2a1f3d', glow: '#b967ff' },
+    mauls: { r: 17, color: '#5a6170', glow: '#38f2c8', ring: '#38f2c8' }
+};
+const FINISHER_NAMES = { phoenix: 'PHOENIX FINISH', cuts: 'THOUSAND CUTS', quake: 'EARTHSHATTER' };
+function titanUnlocked() { return (progress.stars[50] || 0) > 0; }
+function rivalOf(arch, randomize) {
+    if (randomize) {
+        const others = FIGHTERS.filter(a => a !== arch && (a !== 'titan' || titanUnlocked()));
+        return others[Math.floor(Math.random() * others.length)];
+    }
+    return arch === 'brawler' ? 'blade' : 'brawler';
+}
 const BOSS_PALETTE = { color: '#3a3a4a', dark: '#14141c', accent: '#ff2a2a', hud: '#ff4040' };
 const RANKS = [
     { name: 'ROOKIE', color: '#7af4ff' }, { name: 'FIGHTER', color: '#7aff9a' }, { name: 'VETERAN', color: '#ffcc00' },
@@ -1124,6 +1187,7 @@ function getPose(f) {
         case 'win': { const b = Math.sin(t * 0.15); p.aF = [3.0 + b * 0.1, 0.1]; p.aB = [0.3, 1.8]; p.lF = [0.3, 0]; p.lB = [-0.3, 0]; p.crouch = b * 3; break; }
         case 'super':
             if (f.arch === 'blade') { p.lean = 0.45; p.aF = [1.4, 0.2]; p.aB = [-0.9, 0.3]; p.lF = [1.0, -0.8]; p.lB = [-0.9, 0.3]; }
+            else if (f.arch === 'titan') { p.aF = [2.9, 0.2]; p.aB = [2.7, 0.3]; p.lean = -0.1; p.lF = [0.9, -1.4]; p.lB = [0.3, -1.0]; }
             else { p.aF = [1.6, -0.1]; p.aB = [1.5, 0.1]; p.lean = 0.1; p.crouch = 8; p.lF = [0.6, -0.5]; p.lB = [-0.5, 0.2]; }
             break;
     }
@@ -1153,7 +1217,8 @@ function drawFigure(f, o = {}) {
     if (f.state === 'ko') ctx.rotate(f.koRot);
     ctx.lineCap = 'round'; ctx.lineJoin = 'round';
     const hipY = -62 + P.crouch;
-    const bulky = f.arch === 'brawler';
+    const titan = f.arch === 'titan', bulky = f.arch === 'brawler' || titan, lw = titan ? 1.3 : 1;
+    if (titan) ctx.scale(1.12, 1.12); // the colossus is bigger
     const gear = f.gear || {};
 
     if (!o.tint && gear.acc === 'wings') { // phoenix wings
@@ -1176,7 +1241,7 @@ function drawFigure(f, o = {}) {
         ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(0, hipY - 30, 70, 100, 0, 0, Math.PI * 2); ctx.fill();
     }
 
-    limb(-4, hipY, P.lB, 32, 30, bulky ? 13 : 10, dark);
+    limb(-4, hipY, P.lB, 32, 30, (bulky ? 13 : 10) * lw, dark);
 
     ctx.save();
     ctx.translate(0, hipY); ctx.rotate(P.lean);
@@ -1187,7 +1252,8 @@ function drawFigure(f, o = {}) {
         ctx.quadraticCurveTo(-30, -20 + wv, -48 + wv, 34);
         ctx.lineTo(-14, 36); ctx.quadraticCurveTo(-6, -8, 4, -50); ctx.closePath(); ctx.fill();
     }
-    const bHand = limb(0, -48, P.aB, 26, 24, bulky ? 11 : 8, dark);
+    const bHand = limb(0, -48, P.aB, 26, 24, (bulky ? 11 : 8) * lw, dark);
+    if (titan) { ctx.fillStyle = o.tint || dark; ctx.beginPath(); ctx.arc(bHand.x, bHand.y, (TITAN_LOOK[gear.weapon] || TITAN_LOOK.stone).r - 2, 0, Math.PI * 2); ctx.fill(); }
     if (bulky && gear.weapon === 'magma') {
         ctx.fillStyle = o.tint || '#c42800';
         ctx.beginPath(); ctx.arc(bHand.x, bHand.y, 11, 0, Math.PI * 2); ctx.fill();
@@ -1205,12 +1271,21 @@ function drawFigure(f, o = {}) {
     // torso
     ctx.fillStyle = col;
     ctx.beginPath();
-    const sw = bulky ? 21 : 15, ww = bulky ? 15 : 10;
+    const sw = titan ? 27 : bulky ? 21 : 15, ww = titan ? 19 : bulky ? 15 : 10;
     ctx.moveTo(-ww, 0); ctx.lineTo(ww, 0); ctx.lineTo(sw, -52); ctx.lineTo(-sw, -52); ctx.closePath(); ctx.fill();
     ctx.fillStyle = acc; ctx.fillRect(-ww, -8, ww * 2, 6); // belt
+    if (titan) { // shoulder plates and glowing cracks
+        ctx.fillStyle = o.tint || dark; ctx.fillRect(-sw - 5, -57, 15, 13); ctx.fillRect(sw - 10, -57, 15, 13);
+        if (!o.tint) { ctx.strokeStyle = acc; ctx.lineWidth = 2; ctx.shadowColor = acc; ctx.shadowBlur = 8;
+            ctx.beginPath(); ctx.moveTo(-6, -44); ctx.lineTo(2, -32); ctx.lineTo(-3, -22); ctx.moveTo(9, -42); ctx.lineTo(4, -30); ctx.stroke(); ctx.shadowBlur = 0; }
+    }
     // head
-    ctx.beginPath(); ctx.arc(2, -68, bulky ? 16 : 14, 0, Math.PI * 2); ctx.fillStyle = bulky ? (o.tint || (white ? '#fff' : '#e0a070')) : acc; ctx.fill();
-    if (bulky) {
+    ctx.beginPath(); ctx.arc(2, -68, titan ? 17 : bulky ? 16 : 14, 0, Math.PI * 2);
+    ctx.fillStyle = titan ? (o.tint || (white ? '#fff' : dark)) : bulky ? (o.tint || (white ? '#fff' : '#e0a070')) : acc; ctx.fill();
+    if (titan) { // helmet visor
+        ctx.fillStyle = o.tint || acc; if (!o.tint) { ctx.shadowColor = acc; ctx.shadowBlur = 10; }
+        ctx.fillRect(2, -73, 16, 5); ctx.shadowBlur = 0;
+    } else if (bulky) {
         ctx.fillStyle = acc; ctx.fillRect(-14, -76, 32, 5); // headband
         if (!o.tint && !gear.acc) { // flame hair (hidden under hats)
             for (let i = 0; i < 4; i++) {
@@ -1240,8 +1315,13 @@ function drawFigure(f, o = {}) {
         for (let i = 0; i < 5; i++) { const a = i / 5 * Math.PI * 2; ctx.fillStyle = '#ffd1ea'; ctx.beginPath(); ctx.arc(-9 + Math.cos(a) * 4, -78 + Math.sin(a) * 4, 3, 0, Math.PI * 2); ctx.fill(); }
         ctx.fillStyle = '#ffcc00'; ctx.beginPath(); ctx.arc(-9, -78, 2, 0, Math.PI * 2); ctx.fill();
     }
-    const hand = limb(0, -48, P.aF, 26, 24, bulky ? 12 : 9, col);
-    if (bulky) {
+    const hand = limb(0, -48, P.aF, 26, 24, (bulky ? 12 : 9) * lw, col);
+    if (titan) { // stone fists, styled by weapon
+        const tw = TITAN_LOOK[gear.weapon] || TITAN_LOOK.stone;
+        ctx.fillStyle = o.tint || tw.color; if (!o.tint && tw.glow) { ctx.shadowColor = tw.glow; ctx.shadowBlur = 16; }
+        ctx.beginPath(); ctx.arc(hand.x, hand.y, tw.r, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
+        if (!o.tint && tw.ring) { ctx.strokeStyle = tw.ring; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(hand.x, hand.y, tw.r - 2, 0, Math.PI * 2); ctx.stroke(); }
+    } else if (bulky) {
         const glow = f.state === 'special' || f.state === 'super' || f.state === 'punch' || gear.weapon === 'magma';
         const r = gear.weapon === 'magma' ? 13 : 9;
         ctx.fillStyle = o.tint || (gear.weapon === 'magma' ? '#ff3b00' : glow ? '#ffcc00' : col);
@@ -1281,7 +1361,7 @@ function drawFigure(f, o = {}) {
     }
     ctx.restore();
 
-    limb(4, hipY, P.lF, 32, 30, bulky ? 14 : 11, col);
+    limb(4, hipY, P.lF, 32, 30, (bulky ? 14 : 11) * lw, col);
     ctx.restore();
 }
 
@@ -1294,7 +1374,7 @@ class Fighter {
         this.gear = o.gear || null;
         this.stats = Object.assign({}, NO_STATS, o.gear ? o.gear.stats : {});
         this.A = Object.assign({}, ARCH[arch], o.gear ? o.gear.palette : {}, o.palette || {}, o.name ? { name: o.name } : {});
-        this.maxHp = o.hp || MAX_HP; this.dmgMult = o.dmg || 1; this.speedMult = o.speed || 1;
+        this.maxHp = o.hp || ARCH[arch].hp || MAX_HP; this.dmgMult = (o.dmg || 1) * (ARCH[arch].power || 1); this.speedMult = o.speed || 1;
         this.reset(idx === 0 ? W * 0.25 : W * 0.75);
     }
     reset(x) {
@@ -1381,14 +1461,16 @@ class Fighter {
         if (!this.canAttack() || this.super < 30 || projectiles.some(p => p.owner === this)) return;
         this.state = 'special'; this.stateTimer = 28; this.super -= 30;
         audio.fireball();
-        const px = this.x + this.facing * 55, py = this.y - 95;
-        projectiles.push({ x: px, y: py, vx: this.facing * 12, owner: this, kind: this.A.proj, r: 22 + this.stats.blastR, dmg: 12 + this.stats.blast, heavy: true, big: false, t: 0 });
+        const quake = this.A.proj === 'quake'; // TITAN: a shockwave that rolls along the floor (jump over it!)
+        const px = this.x + this.facing * 55, py = quake ? GROUND_Y - 22 : this.y - 95;
+        projectiles.push({ x: px, y: py, vx: this.facing * (quake ? 9 : 12), owner: this, kind: this.A.proj, r: (quake ? 24 : 22) + this.stats.blastR, dmg: (quake ? 14 : 12) + this.stats.blast, heavy: true, big: false, t: 0 });
+        if (quake) { G.shake = Math.max(G.shake, 8); audio.land(); dust(px, GROUND_Y, 10); }
         ring(px, py, this.A.color, 8, 5, 5);
     }
     doSuper() {
         if (!this.canAttack() || this.super < 100) return;
         this.super = 0; this.state = 'super'; this.superT = 0; this.rushHits = 0; this.vx = 0;
-        this.superPhase = this.arch === 'blade' ? 'dash' : 'cast';
+        this.superPhase = this.arch === 'blade' ? 'dash' : this.arch === 'titan' ? 'leap' : 'cast';
         G.freeze = 55; G.freezeBy = this; G.flash = 0.5; G.flashColor = this.A.color;
         if (G.mode === 'tutorial' && this === player1) G.tut.superUsed = true;
         if (this === player1) missionEvent('supers');
@@ -1441,6 +1523,22 @@ class Fighter {
                 op.takeDamage(last ? 12 : 5, last, this, { unblockable: true, noKnock: !last, launch: last, fromSuper: true });
                 this.rushHits++;
                 if (last || op.isDead) { this.superPhase = 'recover'; this.superT = 0; }
+            }
+        } else if (this.superPhase === 'leap') {    // TITAN: TITAN CRUSH (leap + ground slam)
+            if (this.superT === 1) { this.vy = -17; this.isGrounded = false; audio.swing(); }
+            if (!this.isGrounded) { // aim to land just in front of the opponent, steering a little in the air (about 42 frames up and down)
+                const target = op.x - this.facing * 45;
+                this.vx = clamp((target - this.x) / Math.max(6, 43 - this.superT), -10, 10);
+            }
+            if (this.superT % 3 === 0 && !this.isGrounded) afterImage(this, '#38f2c8');
+            if (this.superT > 4 && this.isGrounded) {
+                this.vx = 0;
+                G.shake = Math.max(G.shake, 24); audio.land(); audio.thunder();
+                for (let i = 0; i < 4; i++) ring(this.x, GROUND_Y - 10, i % 2 ? '#38f2c8' : '#c9d1dc', 20 + i * 22, 12, 8, 0.03);
+                dust(this.x, GROUND_Y, 24);
+                if (op.isHorde) { for (const z of op.zombies) if (z.targetable() && Math.abs(z.x - this.x) < 140) z.takeDamage(26, true, this, { launch: true }); }
+                else if (!op.isDead && Math.abs(op.x - this.x) < 135 && op.y > GROUND_Y - 60) op.takeDamage(30, true, this, { unblockable: true, launch: true, fromSuper: true });
+                this.superPhase = 'recover'; this.superT = 0;
             }
         } else if (this.superPhase === 'recover') {
             if (this.superT >= 20) this.endSuper();
@@ -1495,11 +1593,14 @@ class Fighter {
         const counter = ['punch', 'kick', 'special'].includes(this.state) && !o.fromSuper && !attacker.noCounter;
         if (counter) dmg = Math.round(dmg * 1.25);
         this.hp = Math.max(0, this.hp - dmg);
-        if (this.state === 'super') this.superPhase = null;
-        this.state = 'hit'; this.stateTimer = heavy ? 22 : 14; this.hasHit = false;
-        if (!o.noKnock) this.vx = attacker.facing * (heavy ? 11 : 6);
-        if (o.launch) { this.vy = -10; this.vx = attacker.facing * 9; this.isGrounded = false; }
-        else if (!this.isGrounded && heavy) this.vy = Math.min(this.vy, -5);
+        const armored = this.state === 'super' && this.superPhase === 'leap'; // TITAN CRUSH has super armour: hits hurt but don't stop it
+        if (!armored) {
+            if (this.state === 'super') this.superPhase = null;
+            this.state = 'hit'; this.stateTimer = heavy ? 22 : 14; this.hasHit = false;
+            if (!o.noKnock) this.vx = attacker.facing * (heavy ? 11 : 6) * (this.A.heavy ? 0.5 : 1);
+            if (o.launch) { this.vy = -10; this.vx = attacker.facing * 9; this.isGrounded = false; }
+            else if (!this.isGrounded && heavy) this.vy = Math.min(this.vy, -5);
+        }
         this.flash = 8;
         this.super = Math.min(100, this.super + dmg * 0.6);
 
@@ -1796,7 +1897,7 @@ function updateProjectiles() {
             p.hitZ = p.hitZ || [];
             for (const z of target.zombies) {
                 if (!z.targetable() || p.hitZ.includes(z)) continue;
-                const zy = p.kind === 'inferno' ? Math.abs((z.y - 70) - p.y) < 110 : Math.abs(p.y - (z.y - 80)) < p.r + 50;
+                const zy = p.kind === 'quake' ? z.y > GROUND_Y - 40 : p.kind === 'inferno' ? Math.abs((z.y - 70) - p.y) < 110 : Math.abs(p.y - (z.y - 80)) < p.r + 50;
                 if (Math.abs(p.x - z.x) < p.r + 22 && zy) {
                     p.hitZ.push(z);
                     const r = z.takeDamage(p.dmg, p.heavy, { facing: Math.sign(p.vx), A: p.owner.A, dmgMult: p.owner.dmgMult, rage: p.owner.rage, x: p.x }, { launch: p.launch });
@@ -1806,7 +1907,7 @@ function updateProjectiles() {
                 }
             }
         } else {
-            const hitY = p.kind === 'inferno' ? Math.abs((target.y - 70) - p.y) < 110 : Math.abs(p.y - (target.y - 80)) < p.r + 50;
+            const hitY = p.kind === 'quake' ? target.y > GROUND_Y - 40 : p.kind === 'inferno' ? Math.abs((target.y - 70) - p.y) < 110 : Math.abs(p.y - (target.y - 80)) < p.r + 50;
             if (!target.isDead && Math.abs(p.x - target.x) < p.r + 25 && hitY) {
                 const pseudo = { facing: Math.sign(p.vx), A: p.owner.A, dmgMult: p.owner.dmgMult, rage: p.owner.rage };
                 const r = target.takeDamage(p.dmg, p.heavy, pseudo, { launch: p.launch, fromSuper: p.big });
@@ -1836,6 +1937,15 @@ function drawProjectiles() {
             ctx.beginPath(); ctx.arc(-20, 0, 40, -1.1, 1.1); ctx.stroke();
             ctx.strokeStyle = 'rgba(0,240,255,0.5)'; ctx.lineWidth = 18;
             ctx.beginPath(); ctx.arc(-26, 0, 40, -1.0, 1.0); ctx.stroke();
+        } else if (p.kind === 'quake') {
+            const dir = Math.sign(p.vx);
+            for (let k = 0; k < 5; k++) {
+                const sx = p.x - dir * k * 16, h = (36 - k * 6) * (0.8 + 0.2 * Math.sin(p.t * 0.9 + k));
+                ctx.fillStyle = k === 0 ? '#c9d1dc' : '#7d8597';
+                ctx.beginPath(); ctx.moveTo(sx - 11, GROUND_Y + 2); ctx.lineTo(sx - 2, GROUND_Y - h); ctx.lineTo(sx + 10, GROUND_Y + 2); ctx.fill();
+            }
+            ctx.strokeStyle = '#38f2c8'; ctx.lineWidth = 3; ctx.shadowColor = '#38f2c8'; ctx.shadowBlur = 12;
+            ctx.beginPath(); ctx.moveTo(p.x - dir * 100, GROUND_Y + 3); ctx.lineTo(p.x + dir * 6, GROUND_Y + 3); ctx.stroke();
         } else if (p.kind === 'inferno') {
             for (let k = 0; k < 7; k++) {
                 const fh = 90 + Math.sin(p.t * 0.5 + k * 1.3) * 30 + (3 - Math.abs(k - 3)) * 22;
@@ -1934,9 +2044,21 @@ function playerInput(f, map) {
  * starts both fighters with a full super, and runs on a 60s clock.
  * ========================================================= */
 function selectChar(arch) {
+    if (arch === 'titan' && !titanUnlocked()) { // locked: shake the card
+        const c = $('card-titan'); c.classList.remove('shake'); void c.offsetWidth; c.classList.add('shake'); audio.block(); return;
+    }
     G.p1Arch = arch;
-    $('card-brawler').classList.toggle('selected', arch === 'brawler');
-    $('card-blade').classList.toggle('selected', arch === 'blade');
+    for (const a of FIGHTERS) $('card-' + a).classList.toggle('selected', arch === a);
+    if (arch === 'titan' && !progress.titanSeen) { progress.titanSeen = true; saveProgress(); renderRoster(); }
+}
+function renderRoster() {
+    const un = titanUnlocked();
+    $('card-titan').classList.toggle('locked', !un);
+    $('card-titan').classList.toggle('newfighter', un && !progress.titanSeen);
+    const cleared = Object.keys(progress.stars).filter(k => progress.stars[k] > 0 && +k >= 1 && +k <= 50).length;
+    $('titan-lock').textContent = `🔒 CLEAR ALL 50 LEVELS (${Math.min(cleared, 50)}/50)`;
+    for (const id of ['lv-pick-titan', 'shop-pick-titan']) { $(id).disabled = !un; $(id).textContent = un ? 'TITAN' : '🔒 TITAN'; }
+    if (!un && G.p1Arch === 'titan') selectChar('brawler');
 }
 
 function showBanner(main, sub = '', cls = '', color = '#ff0055') {
@@ -1965,7 +2087,7 @@ function startMatch(mode) {
     audio.init();
     G.mode = mode;
     G.ai = aiParams(15);
-    const p2Arch = G.p1Arch === 'brawler' ? 'blade' : 'brawler';
+    const p2Arch = rivalOf(G.p1Arch, G.mode === 'ai');
     player1 = new Fighter(G.p1Arch, 0, { gear: loadout(G.p1Arch) });
     player2 = new Fighter(p2Arch, 1, mode === 'pvp' ? { gear: loadout(p2Arch) } : {});
     setupMatchHUD((mode === 'ai' ? 'CPU ' : '') + player2.name);
@@ -1977,7 +2099,7 @@ function startLevel(L) {
     audio.init();
     G.mode = 'levels'; G.level = L; G.ai = aiParams(L);
     const mirror = L % 2 === 0;
-    const p2Arch = mirror ? G.p1Arch : (G.p1Arch === 'brawler' ? 'blade' : 'brawler');
+    const p2Arch = mirror ? G.p1Arch : G.p1Arch === 'titan' ? (L % 4 === 1 ? 'brawler' : 'blade') : rivalOf(G.p1Arch, false);
     const boss = G.ai.boss;
     player1 = new Fighter(G.p1Arch, 0, { gear: loadout(G.p1Arch) });
     if (L >= ZOMBIE_START) {
@@ -2026,9 +2148,9 @@ function onKO(victim) {
     const winner = victim.idx === 0 ? player2 : player1;
     const matchPoint = G.mode === 'tutorial' || (!winner.isHorde && G.wins[winner.idx] === 1);
     if (matchPoint && !winner.isHorde) {
-        G.fin = { type: winner.arch === 'brawler' ? 'phoenix' : 'cuts', t: 0, x: victim.x, y: victim.y, winner };
+        G.fin = { type: { brawler: 'phoenix', blade: 'cuts', titan: 'quake' }[winner.arch] || 'phoenix', t: 0, x: victim.x, y: victim.y, winner };
         G.slow = 110;
-        showBanner('K.O.', G.fin.type === 'phoenix' ? 'PHOENIX FINISH' : 'THOUSAND CUTS', 'ko', winner.A.color);
+        showBanner('K.O.', FINISHER_NAMES[G.fin.type], 'ko', winner.A.color);
         G.finUsed = winner === player1;
     } else showBanner('K.O.', '', 'ko', winner.A.color);
 }
@@ -2038,6 +2160,10 @@ function updateFinisher() {
     if (F.type === 'phoenix') {
         if (F.t % 2 === 0 && F.t < 80) for (let i = 0; i < 3; i++) addFx({ type: 'spark', x: F.x + rand(-70, 70), y: GROUND_Y - rand(0, 30), vx: rand(-1, 1), vy: rand(-9, -4), r: rand(4, 10), color: ['#ffcc00', '#ff5500', '#fff3b0'][i], grav: -0.08, decay: 0.03 });
         if (F.t === 12) { audio.fireball(); audio.thunder(); G.shake = Math.max(G.shake, 16); for (let i = 0; i < 4; i++) ring(F.x, F.y - 90, i % 2 ? '#ff5500' : '#ffcc00', 20 + i * 25, 11, 9, 0.025); }
+    } else if (F.type === 'quake') {
+        if (F.t === 6 || F.t === 34) { G.shake = Math.max(G.shake, 22); audio.thunder(); audio.land(); dust(F.x, GROUND_Y, 30);
+            for (let i = 0; i < 3; i++) ring(F.x, GROUND_Y - 20, i % 2 ? '#38f2c8' : '#c9d1dc', 30 + i * 30, 13, 9, 0.03); }
+        if (F.t < 70 && F.t % 3 === 0) addFx({ type: 'spark', x: F.x + rand(-200, 200), y: GROUND_Y - rand(0, 20), vx: rand(-1, 1), vy: rand(-6, -2), r: rand(3, 7), color: Math.random() < 0.7 ? '#9aa3b5' : '#38f2c8', grav: 0.15, decay: 0.03 });
     } else {
         if (F.t < 50 && F.t % 5 === 0) { slashFX(F.x + rand(-20, 20), F.y - 80 + rand(-30, 30), F.t % 10 ? '#00f0ff' : '#ff2a6d'); audio.slash(); }
         if (F.t === 52) { G.flash = Math.max(G.flash, 0.8); G.flashColor = '#bff8ff'; G.shake = Math.max(G.shake, 14); for (let i = 0; i < 3; i++) ring(F.x, F.y - 80, '#ffffff', 20 + i * 20, 12, 8, 0.03); sparks(F.x, F.y - 80, '#00f0ff', 40, 20); }
@@ -2061,6 +2187,16 @@ function drawFinisher() {
         }
         ctx.fillStyle = 'rgba(255,220,120,0.9)'; ctx.beginPath(); ctx.ellipse(cx, cy, 16 + k * 8, 34 + k * 16, 0, 0, Math.PI * 2); ctx.fill();
         ctx.beginPath(); ctx.moveTo(cx - 8, cy + 30); ctx.lineTo(cx, cy + 110 * k); ctx.lineTo(cx + 8, cy + 30); ctx.fill();
+    } else if (F.type === 'quake') { // stone spikes erupting around the loser
+        for (let i = -5; i <= 5; i++) {
+            const d = Math.abs(i), g = clamp((F.t - d * 4) / 10, 0, 1);
+            if (!g) continue;
+            const h = g * (150 - d * 18), sx = F.x + i * 40;
+            const grd = ctx.createLinearGradient(0, GROUND_Y, 0, GROUND_Y - h);
+            grd.addColorStop(0, '#3c4250'); grd.addColorStop(1, '#c9d1dc');
+            ctx.fillStyle = grd; ctx.beginPath(); ctx.moveTo(sx - 20, GROUND_Y + 4); ctx.lineTo(sx - 3, GROUND_Y - h); ctx.lineTo(sx + 18, GROUND_Y + 4); ctx.fill();
+            ctx.strokeStyle = '#38f2c8'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(sx - 3, GROUND_Y - h); ctx.lineTo(sx + 4, GROUND_Y - h * 0.4); ctx.stroke();
+        }
     } else { // afterimages of the winner circling the target
         const w = F.winner;
         for (let i = 0; i < 6 && F.t < 60; i++) {
@@ -2174,6 +2310,7 @@ function mergeProgress(str) {
             progress.equip = (d.equip && typeof d.equip === 'object') ? d.equip : {};
             progress.rev = d.rev | 0;
             if (d.tutorialDone) progress.tutorialDone = true;
+            if (d.titanSeen) progress.titanSeen = true;
             progress.daily = cleanDaily(d.daily);
         }
         updateCoinsUI();
@@ -2199,8 +2336,7 @@ function openLevels() {
 }
 function closeLevels() { $('levels-screen').classList.add('hidden'); showMenu(); }
 function renderLevels() {
-    $('lv-pick-brawler').classList.toggle('on', G.p1Arch === 'brawler');
-    $('lv-pick-blade').classList.toggle('on', G.p1Arch === 'blade');
+    for (const a of FIGHTERS) $('lv-pick-' + a).classList.toggle('on', G.p1Arch === a);
     const total = Object.values(progress.stars).reduce((a, b) => a + b, 0);
     $('lv-stars-total').innerHTML = `&#9733; ${total} / 150`;
     const grid = $('lv-grid');
@@ -2246,6 +2382,10 @@ function showLevelResult() {
     $('res-info').innerHTML = won
         ? `${G.wins[0]} &ndash; ${G.wins[1]} vs ${player2.name}<br>` + (stars < 3 ? 'Win 2&ndash;0 and finish both rounds above half health for &#9733;&#9733;&#9733;' : 'Flawless. All three stars.')
         : `${G.wins[0]} &ndash; ${G.wins[1]} vs ${player2.name}<br>` + (player2.isHorde ? 'Block when a zombie raises its arms, then hit it while it recovers. Kicks hit the whole crowd.' : 'Block after the CPU swings, then hit back while it recovers.');
+    if (won && L === 50 && firstBonus) { // first time clearing every level
+        $('res-info').innerHTML += '<br><span class="unlock-line">&#128275; NEW FIGHTER UNLOCKED: TITAN</span><br><span style="font-size:15px;color:#aaa">Pick him on the main menu</span>';
+        audio.announce(true); audio.thunder(); renderRoster();
+    }
     $('res-coins').innerHTML = G.matchCoins
         ? `<span class="coin"></span> +${G.matchCoins} COINS${firstBonus ? ` <span style="font-size:16px;color:#aaa">(first clear +${firstBonus})</span>` : ''}`
         : '<span class="coin"></span> No coins this time';
@@ -2259,7 +2399,8 @@ function updateCoinsUI() {
     const n = String(progress.coins);
     ['menu-coin-n', 'hud-coin-n', 'shop-coin-n'].forEach(id => { $(id).textContent = n; });
     $('btn-tutorial').classList.toggle('new', !progress.tutorialDone);
-    if (typeof refreshMissionBadge === 'function') refreshMissionBadge(); // point new players to the tutorial
+    if (typeof refreshMissionBadge === 'function') refreshMissionBadge();
+    if (typeof renderRoster === 'function') renderRoster(); // point new players to the tutorial
 }
 function awardCoins(n, x, y, label) {
     progress.coins += n; G.matchCoins += n;
@@ -2300,7 +2441,7 @@ function closeShop() {
     else if (shopFrom === 'result') $('result-screen').classList.remove('hidden');
     else showMenu();
 }
-function shopPick(arch) { selectChar(arch); shopArch = arch; shopHover = null; $('shop-msg').textContent = ''; renderShop(); }
+function shopPick(arch) { if (arch === 'titan' && !titanUnlocked()) return; selectChar(arch); shopArch = arch; shopHover = null; $('shop-msg').textContent = ''; renderShop(); }
 function shopMsg(t) { $('shop-msg').textContent = t; }
 function updatePreviewLabel() {
     const lo = loadout(shopArch, shopHover);
@@ -2309,8 +2450,7 @@ function updatePreviewLabel() {
     $('pv-sub').textContent = `${lo.wName} • ${lo.aName}`;
 }
 function renderShop() {
-    $('shop-pick-brawler').classList.toggle('on', shopArch === 'brawler');
-    $('shop-pick-blade').classList.toggle('on', shopArch === 'blade');
+    for (const a of FIGHTERS) $('shop-pick-' + a).classList.toggle('on', shopArch === a);
     updateCoinsUI(); updatePreviewLabel();
     for (const kind of ['weapons', 'attire']) {
         const box = $(kind === 'weapons' ? 'shop-weapons' : 'shop-attire');
@@ -2393,7 +2533,7 @@ const TUT_STEPS = [
 function startTutorial() {
     audio.init();
     G.mode = 'tutorial'; G.ai = aiParams(1);
-    const p2Arch = G.p1Arch === 'brawler' ? 'blade' : 'brawler';
+    const p2Arch = rivalOf(G.p1Arch, G.mode === 'ai');
     player1 = new Fighter(G.p1Arch, 0, { gear: loadout(G.p1Arch) });
     player2 = new Fighter(p2Arch, 1, { name: 'TRAINING DUMMY', palette: { color: '#8a8a9a', dark: '#4a4a58', accent: '#ffcc00', hud: '#bbbbbb' } });
     setupMatchHUD('TRAINING DUMMY');
@@ -2445,6 +2585,7 @@ const MISSION_POOL = [
     { id: 'win_matches', text: n => `Win ${n} matches`, n: [2, 3], reward: [40, 55] },
     { id: 'win_brawler', text: n => `Win ${n} rounds as PYRO`, n: [2, 3], reward: [35, 45] },
     { id: 'win_blade', text: n => `Win ${n} rounds as VALKYRIE`, n: [2, 3], reward: [35, 45] },
+    { id: 'win_titan', text: n => `Win ${n} rounds as TITAN`, n: [2, 3], reward: [35, 45], needs: () => titanUnlocked() },
     { id: 'supers', text: n => `Use ${n} Supers`, n: [2, 3], reward: [30, 40] },
     { id: 'blasts', text: n => `Hit with ${n} Blasts`, n: [3, 5], reward: [30, 40] },
     { id: 'combos', text: n => `Land ${n} three-hit combos`, n: [2, 4], reward: [35, 50] },

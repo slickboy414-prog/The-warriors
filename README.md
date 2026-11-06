@@ -52,6 +52,17 @@ On phones and tablets, touch controls appear during VS CPU and Levels matches.
 - The shop preview shows your fighter wearing whatever you hover or tap. On touch screens, tap once to preview and tap again to buy.
 - Coins, purchases and equipped gear save with your level progress.
 
+## Unlockable fighter: TITAN
+
+Clear all 50 levels to unlock a third fighter. Until then his card on the menu is locked and shows how many levels you have cleared.
+
+- **Stone colossus:** about 30% slower, 115 health, hits 10% harder, and takes half knockback.
+- **Blast – QUAKE:** a shockwave that rolls along the floor. Opponents can jump over it.
+- **Super – TITAN CRUSH:** leaps at the opponent and slams down for heavy unblockable damage (hits every nearby zombie in zombie levels). Super armour means hits during the leap hurt but don't stop it.
+- **Finisher – EARTHSHATTER:** stone spikes erupt around the loser on the match-winning K.O.
+- His own shop items: Iron Gauntlets, Obsidian Knuckles, Colossus Mauls, and Jade Giant, Molten Core, Golden Colossus and Void Giant outfits.
+- Once unlocked, he can also appear as your CPU opponent in VS CPU, and a "Win rounds as TITAN" daily mission is added.
+
 ## Daily missions
 
 - Three new missions every day at midnight (your local time), from a pool of 13: win rounds or matches, win as a specific fighter, use Supers, hit with Blasts, land three-hit combos, block attacks, win a perfect round, win after using Rage, win with a finisher, clear levels, defeat zombies (once the zombie levels are unlocked).
