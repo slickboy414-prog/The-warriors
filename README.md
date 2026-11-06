@@ -52,6 +52,14 @@ On phones and tablets, touch controls appear during VS CPU and Levels matches.
 - The shop preview shows your fighter wearing whatever you hover or tap. On touch screens, tap once to preview and tap again to buy.
 - Coins, purchases and equipped gear save with your level progress.
 
+## Daily missions
+
+- Three new missions every day at midnight (your local time), from a pool of 13: win rounds or matches, win as a specific fighter, use Supers, hit with Blasts, land three-hit combos, block attacks, win a perfect round, win after using Rage, win with a finisher, clear levels, defeat zombies (once the zombie levels are unlocked).
+- Coins pay out the moment a mission is completed. Finishing all three pays a bonus that grows with your daily streak: +50 on day 1 up to +110 from day 7.
+- One free swap a day for a mission you don't like.
+- Missions count in VS CPU and Levels only (not Local 2P or the tutorial), so they can't be farmed.
+- Open them with **MISSIONS** on the main menu; the badge shows today's progress (for example 1/3).
+
 ## YouTube Playables
 
 The page loads the YouTube Playables SDK and handles pause, resume and the audio toggle. Outside YouTube it runs as a normal web page.

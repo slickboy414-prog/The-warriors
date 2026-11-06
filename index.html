@@ -149,6 +149,28 @@ body { font-family: 'Impact', 'Arial Black', sans-serif; color: #fff; }
 /* ---------- Coins + shop ---------- */
 .coin { display: inline-block; width: 18px; height: 18px; border-radius: 50%; flex: none; background: radial-gradient(circle at 35% 35%, #fff6b0, #ffcc00 45%, #c98a00 100%); border: 2px solid #8a5a00; box-shadow: 0 0 8px rgba(255,204,0,.6); }
 .coin-pill { display: inline-flex; align-items: center; gap: 8px; font-size: 22px; color: #ffcc00; letter-spacing: 1px; text-shadow: 2px 2px 0 #000; font-variant-numeric: tabular-nums; }
+/* ---------- Daily missions ---------- */
+#menu-screen .btn-group { flex-wrap: wrap; justify-content: center; max-width: 820px; row-gap: 16px; }
+.mis-badge { display: inline-block; margin-left: 8px; padding: 1px 7px; font-size: 14px; background: #ffcc00; color: #1a1000; transform: skewX(15deg); vertical-align: middle; }
+.mis-badge.all { background: #7aff9a; }
+.mis-sub { font: 15px Arial, sans-serif; color: #aaa; letter-spacing: 1px; margin: 2px 0 18px; text-align: center; }
+.mis-sub b { color: #ffcc00; }
+.mis-list { display: flex; flex-direction: column; gap: 12px; width: 680px; margin-bottom: 16px; }
+.mis-card { display: grid; grid-template-columns: 1fr auto; gap: 6px 18px; align-items: center; background: #10101c; border: 2px solid #2c2c44; padding: 12px 16px; }
+.mis-card.done { border-color: #7aff9a; background: #0f2416; }
+.mis-text { font-size: 22px; letter-spacing: 1px; }
+.mis-bar { grid-column: 1; height: 10px; background: #1d1d33; border: 1px solid #3a3a55; overflow: hidden; }
+.mis-bar i { display: block; height: 100%; background: linear-gradient(90deg, #00b4ff, #00f0ff); }
+.mis-card.done .mis-bar i { background: linear-gradient(90deg, #3dff6e, #b4ff7a); }
+.mis-count { font: 13px Arial, sans-serif; color: #999; grid-column: 1; font-variant-numeric: tabular-nums; }
+.mis-right { grid-column: 2; grid-row: 1 / span 3; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.mis-reward { font-size: 22px; color: #ffcc00; display: flex; align-items: center; gap: 6px; }
+.mis-state { font-size: 16px; letter-spacing: 2px; color: #7aff9a; }
+.mis-swap { background: #1d1d33; color: #ccc; border: 1px solid #44446a; font: 14px Impact, 'Arial Black', sans-serif; letter-spacing: 1px; padding: 5px 12px; cursor: pointer; }
+.mis-swap:hover, .mis-swap:focus-visible { border-color: #00f0ff; color: #fff; outline: none; }
+.mis-bonus { width: 680px; display: flex; justify-content: space-between; align-items: center; font-size: 20px; letter-spacing: 1px; padding: 12px 16px; border: 2px dashed #5a4a10; margin-bottom: 18px; }
+.mis-bonus.done { border-style: solid; border-color: #7aff9a; color: #7aff9a; }
+.mis-bonus .streak { color: #ff8a3d; }
 #menu-coins { position: absolute; top: 20px; right: 24px; background: rgba(0,0,0,.6); border: 1px solid #5a4a10; padding: 6px 16px; border-radius: 20px; }
 #hud-coins { font-size: 18px; margin-top: 2px; }
 #hud-coins .coin { width: 15px; height: 15px; }
@@ -324,13 +346,14 @@ kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px soli
             <button class="btn alt" onclick="startMatch('ai')">VS CPU</button>
             <button class="btn alt" id="btn-pvp" onclick="startMatch('pvp')">LOCAL 2P</button>
             <button class="btn alt" onclick="openShop('menu')">SHOP</button>
+            <button class="btn alt" id="btn-missions" onclick="openMissions()">MISSIONS<span class="mis-badge" id="mis-badge"></span></button>
         </div>
         <div class="controls-info" id="keys-info">
-            <b>P1:</b> [A/D] Move &bull; [W] Jump &bull; [S] Block &bull; [F] Punch &bull; [G] Kick &bull; [H] Blast (30%) &bull; [T] SUPER (100%)<br>
-            <b>P2:</b> [&larr;/&rarr;] Move &bull; [&uarr;] Jump &bull; [&darr;] Block &bull; [J] Punch &bull; [K] Kick &bull; [L] Blast &bull; [I] SUPER &nbsp;|&nbsp; [P/Esc] Pause
+            <b>P1:</b> [A/D] Move &bull; [W] Jump &bull; [S] Block &bull; [F] Punch &bull; [G] Kick &bull; [H] Blast (30%) &bull; [T] SUPER (100%) &bull; [R] RAGE (low health)<br>
+            <b>P2:</b> [&larr;/&rarr;] Move &bull; [&uarr;] Jump &bull; [&darr;] Block &bull; [J] Punch &bull; [K] Kick &bull; [L] Blast &bull; [I] SUPER &bull; [U] RAGE &nbsp;|&nbsp; [P/Esc] Pause
         </div>
         <div class="controls-info hidden" id="touch-info">
-            Left pad: move / jump / block &bull; Right: PUNCH &bull; KICK &bull; BLAST (30% meter) &bull; SUPER (full meter)
+            Left pad: move / jump / block &bull; Right: PUNCH &bull; KICK &bull; BLAST (30% meter) &bull; SUPER (full meter) &bull; RAGE (low health)
         </div>
     </div>
 
@@ -359,6 +382,18 @@ kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px soli
             <button class="btn alt" id="res-retry" onclick="startLevel(G.level)">RETRY</button>
             <button class="btn alt" onclick="openLevels()">LEVELS</button>
             <button class="btn alt" onclick="openShop('result')">SHOP</button>
+        </div>
+    </div>
+
+    <!-- Daily missions -->
+    <div class="overlay-screen hidden" id="missions-screen">
+        <div class="lv-head"><div class="lv-title">DAILY MISSIONS</div><div class="coin-pill"><span class="coin"></span><span id="mis-coin-n">0</span></div></div>
+        <div class="mis-sub" id="mis-reset"></div>
+        <div class="mis-list" id="mis-list"></div>
+        <div class="mis-bonus" id="mis-bonus"></div>
+        <div class="btn-group">
+            <button class="btn alt" onclick="closeMissions()">BACK</button>
+            <button class="btn" onclick="closeMissions(); openLevels()">PLAY LEVELS</button>
         </div>
     </div>
 
@@ -1356,6 +1391,7 @@ class Fighter {
         this.superPhase = this.arch === 'blade' ? 'dash' : 'cast';
         G.freeze = 55; G.freezeBy = this; G.flash = 0.5; G.flashColor = this.A.color;
         if (G.mode === 'tutorial' && this === player1) G.tut.superUsed = true;
+        if (this === player1) missionEvent('supers');
         audio.superStart();
         for (let i = 0; i < 3; i++) ring(this.x, this.y - 80, i ? this.A.color : '#fff', 20 + i * 15, 8, 8, 0.03);
     }
@@ -1433,6 +1469,7 @@ class Fighter {
         if (result === 'hit') {
             this.combo++; this.comboTimer = 70;
             this.super = Math.min(100, this.super + meter);
+            if (this === player1 && this.combo === 3) missionEvent('combos');
             if (this.combo >= 2) floatText(op.x, op.y - 175, `${this.combo} HIT COMBO!`, '#ffcc00', 34);
         } else if (result === 'block') this.super = Math.min(100, this.super + meter * 0.3);
     }
@@ -1452,6 +1489,7 @@ class Fighter {
             ring(hx, hy, '#00f0ff', 14, 4, 4);
             floatText(this.x, this.y - 150, 'BLOCK', '#00f0ff', 26);
             if (G.mode === 'tutorial' && this === player1) G.tut.blocked = true;
+            if (this === player1) missionEvent('blocks');
             return 'block';
         }
         const counter = ['punch', 'kick', 'special'].includes(this.state) && !o.fromSuper && !attacker.noCounter;
@@ -1565,6 +1603,7 @@ class Zombie {
         sparks(this.x, this.y - 70, '#8dff5a', 22, 14);
         ring(this.x, this.y - 70, '#8dff5a', 12, 7, 6);
         progress.coins += 1; G.matchCoins += 1; updateCoinsUI();
+        missionEvent('zombies');
         floatText(this.x, this.y - 165, '+1', '#ffcc00', 22);
         const H = player2;
         H.killed++;
@@ -1762,6 +1801,7 @@ function updateProjectiles() {
                     p.hitZ.push(z);
                     const r = z.takeDamage(p.dmg, p.heavy, { facing: Math.sign(p.vx), A: p.owner.A, dmgMult: p.owner.dmgMult, rage: p.owner.rage, x: p.x }, { launch: p.launch });
                     p.owner.onLanded(r, p.big ? 0 : 6, z);
+                    if (p.owner === player1 && !p.big && r === 'hit') missionEvent('blasts');
                     if (!p.big) { p.dead = true; break; }
                 }
             }
@@ -1771,6 +1811,7 @@ function updateProjectiles() {
                 const pseudo = { facing: Math.sign(p.vx), A: p.owner.A, dmgMult: p.owner.dmgMult, rage: p.owner.rage };
                 const r = target.takeDamage(p.dmg, p.heavy, pseudo, { launch: p.launch, fromSuper: p.big });
                 if (G.mode === 'tutorial' && p.owner === player1 && r === 'hit') G.tut.hits[p.big ? 'inferno' : 'blast'] = true;
+                if (p.owner === player1 && !p.big && r === 'hit') missionEvent('blasts');
                 p.owner.onLanded(r, p.big ? 0 : 6, target);
                 if (p.big) { for (let k = 0; k < 3; k++) ring(target.x, target.y - 80, '#ffcc00', 20 + k * 20, 9, 8, 0.04); sparks(target.x, target.y - 80, '#ff5500', 30, 18); }
                 p.dead = true;
@@ -1966,7 +2007,7 @@ function startRound() {
     G.freeze = 0; G.hitStop = 0; G.slow = 0; G.zoom = 1; G.zoomTarget = 1; G.shake = 0;
     G.phase = 'intro'; G.phaseT = 0; G.roundWinner = null;
     $('round-label').textContent = (lv ? `LV ${G.level} • ` : '') + (G.final ? 'FINAL ROUND' : `ROUND ${G.round}`);
-    G.fin = null;
+    G.fin = null; G.finUsed = false;
     if (G.mode === 'tutorial') { showBanner('TUTORIAL', 'LEARN THE BASICS IN 30 SECONDS', '', '#00f0ff'); $('round-label').textContent = 'TRAINING'; }
     else if (G.final) showBanner('FINAL ROUND', 'BURNING ARENA • FULL SUPER • 60 SECONDS', '', '#ff6a00');
     else showBanner(`ROUND ${G.round}`, lv ? (zombies ? `LEVEL ${G.level} • DEFEAT ${zombieCount(G.level)} ZOMBIES${G.level === 50 ? ' • ZOMBIE KING' : ''}` : `LEVEL ${G.level} • ${rankOf(G.level).name}${G.ai.boss ? ' • BOSS' : ''}`) : '', '', zombies ? '#8dff5a' : G.ai && lv && G.ai.boss ? '#ff2a2a' : '#00f0ff');
@@ -1988,6 +2029,7 @@ function onKO(victim) {
         G.fin = { type: winner.arch === 'brawler' ? 'phoenix' : 'cuts', t: 0, x: victim.x, y: victim.y, winner };
         G.slow = 110;
         showBanner('K.O.', G.fin.type === 'phoenix' ? 'PHOENIX FINISH' : 'THOUSAND CUTS', 'ko', winner.A.color);
+        G.finUsed = winner === player1;
     } else showBanner('K.O.', '', 'ko', winner.A.color);
 }
 function updateFinisher() {
@@ -2050,6 +2092,11 @@ function resolveRound() {
     if (!f.isDead) { f.state = 'win'; f.stateTimer = 0; f.superPhase = null; }
     updatePips();
     const perfect = f.hp === f.maxHp;
+    if (w === 0) {
+        missionEvent('win_rounds'); missionEvent('win_' + player1.arch);
+        if (perfect) missionEvent('perfect');
+        if (player1.rageUsed) missionEvent('rage_win');
+    }
     if (w === 0 || G.mode === 'pvp') {
         const n = (G.mode === 'pvp' ? 5 : 10) + (G.mode === 'levels' ? Math.floor(G.level / 5) * 2 : 0) + (perfect ? 5 : 0);
         awardCoins(n, f.x, f.y - 165, perfect ? 'PERFECT' : '');
@@ -2076,6 +2123,7 @@ function phaseLogic() {
             if (w !== null && G.wins[w] >= 2) {
                 G.phase = 'matchEnd'; G.phaseT = 0;
                 const f = w === 0 ? player1 : player2;
+                if (w === 0) { missionEvent('win_matches'); if (G.mode === 'levels') missionEvent('levels'); if (G.fin || G.finUsed) missionEvent('finisher'); }
                 if (w === 0 || G.mode === 'pvp') awardCoins(G.mode === 'pvp' ? 10 : (G.mode === 'levels' ? 20 + G.level : 20), f.x, f.y - 200, 'MATCH');
                 showBanner('WINNER', `${f.name}  ${G.wins[w]} - ${G.wins[1 - w]}`, '', f.A.color);
             } else {
@@ -2113,7 +2161,7 @@ function quitToMenu() {
 }
 
 /* ---------- Levels: progress, select screen, results ---------- */
-let progress = { unlocked: 1, stars: {}, coins: 0, owned: [], equip: {}, rev: 0 };
+let progress = { unlocked: 1, stars: {}, coins: 0, owned: [], equip: {}, rev: 0, daily: null };
 function mergeProgress(str) {
     try {
         const d = JSON.parse(str);
@@ -2126,6 +2174,7 @@ function mergeProgress(str) {
             progress.equip = (d.equip && typeof d.equip === 'object') ? d.equip : {};
             progress.rev = d.rev | 0;
             if (d.tutorialDone) progress.tutorialDone = true;
+            progress.daily = cleanDaily(d.daily);
         }
         updateCoinsUI();
     } catch (e) { /* ignore bad save */ }
@@ -2209,7 +2258,8 @@ function showLevelResult() {
 function updateCoinsUI() {
     const n = String(progress.coins);
     ['menu-coin-n', 'hud-coin-n', 'shop-coin-n'].forEach(id => { $(id).textContent = n; });
-    $('btn-tutorial').classList.toggle('new', !progress.tutorialDone); // point new players to the tutorial
+    $('btn-tutorial').classList.toggle('new', !progress.tutorialDone);
+    if (typeof refreshMissionBadge === 'function') refreshMissionBadge(); // point new players to the tutorial
 }
 function awardCoins(n, x, y, label) {
     progress.coins += n; G.matchCoins += n;
@@ -2385,6 +2435,141 @@ function tutorialEnd() {
         audio.announce(true);
     }
     if (G.phaseT === 240) showMenu();
+}
+
+/* ---------- Daily missions ----------
+ * 3 missions a day (local time), coins pay out on completion, a bonus for all 3 that grows
+ * with a daily streak, and one free swap per day. Only VS CPU and Levels count. */
+const MISSION_POOL = [
+    { id: 'win_rounds', text: n => `Win ${n} rounds`, n: [3, 5], reward: [30, 45] },
+    { id: 'win_matches', text: n => `Win ${n} matches`, n: [2, 3], reward: [40, 55] },
+    { id: 'win_brawler', text: n => `Win ${n} rounds as PYRO`, n: [2, 3], reward: [35, 45] },
+    { id: 'win_blade', text: n => `Win ${n} rounds as VALKYRIE`, n: [2, 3], reward: [35, 45] },
+    { id: 'supers', text: n => `Use ${n} Supers`, n: [2, 3], reward: [30, 40] },
+    { id: 'blasts', text: n => `Hit with ${n} Blasts`, n: [3, 5], reward: [30, 40] },
+    { id: 'combos', text: n => `Land ${n} three-hit combos`, n: [2, 4], reward: [35, 50] },
+    { id: 'perfect', text: () => 'Win a round without taking damage', n: [1], reward: [50] },
+    { id: 'blocks', text: n => `Block ${n} attacks`, n: [10, 20], reward: [25, 40] },
+    { id: 'rage_win', text: () => 'Win a round after using Rage', n: [1], reward: [45] },
+    { id: 'finisher', text: () => 'Win a match with a signature finisher', n: [1], reward: [40] },
+    { id: 'levels', text: n => `Clear ${n} level${n > 1 ? 's' : ''}`, n: [1, 2], reward: [35, 50] },
+    { id: 'zombies', text: n => `Defeat ${n} zombies`, n: [8, 15], reward: [40, 60], needs: () => progress.unlocked >= ZOMBIE_START }
+];
+const nowDate = () => new Date(window.__fakeNow || Date.now()); // __fakeNow lets tests change the day
+function dayKey(d) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
+function yesterdayKey() { const d = nowDate(); d.setDate(d.getDate() - 1); return dayKey(d); }
+function pickMission(excludeIds) {
+    const pool = MISSION_POOL.filter(m => !excludeIds.includes(m.id) && (!m.needs || m.needs()));
+    const m = pool[Math.floor(Math.random() * pool.length)];
+    const tier = Math.floor(Math.random() * m.n.length);
+    return { id: m.id, target: m.n[tier], reward: m.reward[tier], progress: 0, done: false };
+}
+function cleanDaily(d) {
+    if (!d || typeof d !== 'object' || typeof d.date !== 'string' || !Array.isArray(d.missions) || d.missions.length !== 3) return null;
+    const ms = d.missions.map(m => {
+        const def = m && MISSION_POOL.find(x => x.id === m.id);
+        if (!def) return null;
+        const target = clamp(m.target | 0, 1, 50);
+        return { id: def.id, target, reward: clamp(m.reward | 0, 1, 100), progress: clamp(m.progress | 0, 0, target), done: !!m.done };
+    });
+    if (ms.includes(null)) return null;
+    return { date: d.date, missions: ms, swapped: !!d.swapped, bonusPaid: !!d.bonusPaid,
+             streak: clamp(d.streak | 0, 0, 999), lastAllDate: typeof d.lastAllDate === 'string' ? d.lastAllDate : '' };
+}
+function ensureDaily() {
+    const today = dayKey(nowDate()), old = progress.daily;
+    if (old && old.date === today) return old;
+    const ids = [];
+    const missions = [0, 1, 2].map(() => { const m = pickMission(ids); ids.push(m.id); return m; });
+    // the streak survives only if every mission was finished yesterday
+    const streak = old && old.lastAllDate === yesterdayKey() ? old.streak : 0;
+    progress.daily = { date: today, missions, swapped: false, bonusPaid: false, streak, lastAllDate: old ? old.lastAllDate : '' };
+    saveProgress();
+    return progress.daily;
+}
+function streakBonus(streak) { return 50 + 10 * (Math.min(Math.max(streak, 1), 7) - 1); }
+function missionEvent(id, amount = 1) {
+    if (G.mode !== 'ai' && G.mode !== 'levels') return; // no farming in Local 2P or the tutorial
+    const D = ensureDaily();
+    let changed = false;
+    for (const m of D.missions) {
+        if (m.id !== id || m.done) continue;
+        m.progress = Math.min(m.target, m.progress + amount); changed = true;
+        if (m.progress >= m.target) {
+            m.done = true;
+            progress.coins += m.reward; G.matchCoins = (G.matchCoins || 0) + m.reward;
+            const def = MISSION_POOL.find(x => x.id === m.id);
+            missionToast(`MISSION COMPLETE  +${m.reward}`, def.text(m.target));
+        }
+    }
+    if (changed && !D.bonusPaid && D.missions.every(m => m.done)) {
+        D.streak = D.lastAllDate === yesterdayKey() ? D.streak + 1 : 1;
+        D.lastAllDate = D.date; D.bonusPaid = true;
+        const bonus = streakBonus(D.streak);
+        progress.coins += bonus; G.matchCoins = (G.matchCoins || 0) + bonus;
+        setTimeout(() => missionToast(`ALL MISSIONS DONE  +${bonus}`, `${D.streak}-day streak`), 1200);
+    }
+    if (changed) { saveProgress(); updateCoinsUI(); }
+}
+function missionToast(title, sub) {
+    if (player1) {
+        const x = clamp(player1.x, 220, W - 220);
+        floatText(x, GROUND_Y - 300, title, '#7aff9a', 32);
+        floatText(x, GROUND_Y - 268, sub, '#ffffff', 20);
+    }
+    audio.tone('square', 990, null, .09, .14); audio.tone('square', 1320, null, .09, .14, .09); audio.tone('square', 1760, null, .18, .14, .18);
+}
+function swapMission(i) {
+    const D = ensureDaily();
+    if (D.swapped || D.missions[i].done) return;
+    D.missions[i] = pickMission(D.missions.map(m => m.id));
+    D.swapped = true; saveProgress(); renderMissions();
+}
+function refreshMissionBadge() {
+    const D = progress.daily && progress.daily.date === dayKey(nowDate()) ? progress.daily : null;
+    const done = D ? D.missions.filter(m => m.done).length : 0;
+    const b = $('mis-badge'); b.textContent = `${done}/3`; b.classList.toggle('all', done === 3);
+}
+let missionsTimer = null;
+function openMissions() {
+    audio.init(); ensureDaily();
+    $('menu-screen').classList.add('hidden');
+    renderMissions();
+    $('missions-screen').classList.remove('hidden');
+    clearInterval(missionsTimer);
+    missionsTimer = setInterval(() => { if (progress.daily.date !== dayKey(nowDate())) ensureDaily(); renderMissions(); }, 1000);
+}
+function closeMissions() { clearInterval(missionsTimer); $('missions-screen').classList.add('hidden'); showMenu(); }
+function renderMissions() {
+    const D = ensureDaily();
+    const now = nowDate(), next = new Date(now); next.setHours(24, 0, 0, 0);
+    const left = Math.max(0, next - now), h = Math.floor(left / 3600000), mm = Math.floor(left / 60000) % 60, ss = Math.floor(left / 1000) % 60;
+    $('mis-reset').innerHTML = `New missions in <b>${h}h ${String(mm).padStart(2, '0')}m ${String(ss).padStart(2, '0')}s</b> &bull; Counts in VS CPU and Levels`;
+    $('mis-coin-n').textContent = progress.coins;
+    const list = $('mis-list'); list.innerHTML = '';
+    D.missions.forEach((m, i) => {
+        const def = MISSION_POOL.find(x => x.id === m.id);
+        const card = document.createElement('div');
+        card.className = 'mis-card' + (m.done ? ' done' : '');
+        const pct = Math.round(m.progress / m.target * 100);
+        card.innerHTML = `<div class="mis-text"></div><div class="mis-right"><div class="mis-reward"><span class="coin"></span>${m.reward}</div></div>
+            <div class="mis-bar"><i style="width:${pct}%"></i></div><div class="mis-count">${m.progress} / ${m.target}</div>`;
+        card.querySelector('.mis-text').textContent = def.text(m.target);
+        const right = card.querySelector('.mis-right');
+        if (m.done) { const st = document.createElement('div'); st.className = 'mis-state'; st.textContent = 'DONE ✓'; right.appendChild(st); }
+        else if (!D.swapped) {
+            const b = document.createElement('button'); b.className = 'mis-swap'; b.textContent = '↻ SWAP (1 FREE)';
+            b.onclick = () => swapMission(i); right.appendChild(b);
+        }
+        list.appendChild(card);
+    });
+    const done = D.missions.filter(m => m.done).length, nextStreak = D.lastAllDate === yesterdayKey() ? D.streak + 1 : 1;
+    const bonus = $('mis-bonus');
+    bonus.className = 'mis-bonus' + (D.bonusPaid ? ' done' : '');
+    bonus.innerHTML = D.bonusPaid
+        ? `<span>ALL DONE TODAY ✓</span><span class="streak">🔥 ${D.streak}-DAY STREAK</span>`
+        : `<span>Finish all 3 (${done}/3): <span class="coin" style="vertical-align:middle"></span> +${streakBonus(nextStreak)}</span><span class="streak">${nextStreak > 1 ? `🔥 DAY ${nextStreak} OF YOUR STREAK` : 'START A STREAK'}</span>`;
+    refreshMissionBadge();
 }
 
 function setPaused(p) {
@@ -2621,6 +2806,7 @@ fit();
 rebuildStages();
 setupTouch();
 loadProgress();
+ensureDaily();
 updateCoinsUI();
 refreshTouchUI();
 fit();
