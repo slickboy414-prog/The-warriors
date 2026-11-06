@@ -19,7 +19,7 @@ A best-of-3 rooftop arcade fighter in a single HTML file. No build step and no d
 
 On phones and tablets, touch controls appear during VS CPU and Levels matches.
 
-**Fits any screen:** the arena takes the shape of the device. Wide phones in landscape get a wider arena with no black bars, tablets and 16:10 laptops get a narrower one, and phones held upright use a 9:16 frame (like YouTube Shorts) with the arena on top and large touch controls underneath. Rotating the device switches the layout instantly.
+**Fits any screen:** the arena takes the shape of the device. Wide phones in landscape get a wider arena with no black bars, tablets and 16:10 laptops get a narrower one, and phones held upright use a 9:16 frame (like YouTube Shorts) with the arena on top and large touch controls underneath. Rotating the device switches the layout instantly. A fight camera zooms in (up to 1.3×) when the fighters are close and pulls back to keep everyone on screen.
 
 ## Rules
 

@@ -20,8 +20,10 @@ body { font-family: 'Impact', 'Arial Black', sans-serif; color: #fff; }
     transform-origin: center center;
     overflow: hidden; background: #000;
 }
-#gameCanvas { position: absolute; left: 0; top: 0; width: var(--sw, 1280px); height: 720px; display: block; }
-#deck { display: none; position: absolute; left: 0; right: 0; top: 720px; bottom: 0; background: linear-gradient(180deg, #120a24 0%, #07050f 100%); border-top: 3px solid #ff0055; box-shadow: inset 0 12px 30px rgba(255,0,85,.15); }
+/* #view holds the arena (canvas + HUD + banners); on upright phones it is drawn larger (--vz) */
+#view { position: absolute; left: 0; top: 0; width: var(--aw, 1280px); height: 720px; transform: scale(var(--vz, 1)); transform-origin: 0 0; }
+#gameCanvas { position: absolute; left: 0; top: 0; width: var(--aw, 1280px); height: 720px; display: block; }
+#deck { display: none; position: absolute; left: 0; right: 0; top: calc(720px * var(--vz, 1)); bottom: 0; background: linear-gradient(180deg, #120a24 0%, #07050f 100%); border-top: 3px solid #ff0055; box-shadow: inset 0 12px 30px rgba(255,0,85,.15); }
 #stage.tall #deck { display: block; }
 #deck .deck-logo { position: absolute; left: 0; right: 0; top: 40px; text-align: center; font-size: 40px; letter-spacing: 8px; color: rgba(255,255,255,.08); }
 
@@ -30,9 +32,10 @@ body { font-family: 'Impact', 'Arial Black', sans-serif; color: #fff; }
 .hud-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; }
 .fighter-hud { flex: 1; display: flex; flex-direction: column; gap: 6px; }
 .fighter-hud.p2 { align-items: flex-end; }
-.name-row { display: flex; align-items: center; gap: 14px; }
+.name-row { display: flex; align-items: center; gap: 14px; min-width: 0; max-width: 100%; }
 .p2 .name-row { flex-direction: row-reverse; }
-.fighter-name { font-size: 26px; letter-spacing: 2px; text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000; }
+.fighter-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; font-size: 26px; letter-spacing: 2px; text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000; }
+.pips { white-space: nowrap; flex: none; }
 .pips span { display: inline-block; width: 16px; height: 16px; margin: 0 5px; border: 2px solid #fff; transform: rotate(45deg); background: rgba(0,0,0,.5); }
 .pips span.on { background: #ffcc00; box-shadow: 0 0 12px #ffcc00; }
 .bar-container { width: 100%; height: 26px; background: rgba(20,20,30,.85); border: 2px solid #fff; box-shadow: 0 0 10px rgba(0,0,0,.8); position: relative; transform: skewX(-15deg); overflow: hidden; }
@@ -187,8 +190,14 @@ kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px soli
 #stage.tall .title-text { font-size: 64px; }
 #stage.tall .controls-info, #stage.tall .help-tips { max-width: 620px; }
 #stage.tall .res-title { font-size: 70px; }
-#stage.tall #banner .main { font-size: 84px; }
-#stage.tall #banner.ko .main { font-size: 150px; }
+#stage.tall #banner .main { font-size: 70px; }
+#stage.tall #banner.ko .main { font-size: 130px; }
+#stage.tall #banner .sub { font-size: 20px; letter-spacing: 2px; }
+#stage.tall .fighter-name { font-size: 19px; letter-spacing: 1px; }
+#stage.tall .pips span { width: 12px; height: 12px; margin: 0 3px; }
+#stage.tall .ui-layer { padding: 14px 14px; }
+#stage.tall .hud-header { gap: 10px; }
+#stage.tall .timer-box { width: 70px; height: 58px; font-size: 38px; }
 #stage.tall .lv-grid { grid-template-columns: repeat(5, 80px); row-gap: 10px; }
 #stage.tall .lv-rank { grid-column: 1 / -1; text-align: left; padding: 10px 0 0; }
 #stage.tall #shop-screen { padding-top: 30px; }
@@ -207,15 +216,15 @@ kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px soli
 #stage.tall .tb.p { right: calc(20px + 2 * var(--cell)); left: auto; bottom: calc(40px + var(--cell)); font-size: 22px; }
 #stage.tall .tb.k { right: 20px; left: auto; bottom: calc(40px + var(--cell)); }
 #stage.tall .tb.s { right: calc(20px + var(--cell)); left: auto; bottom: 40px; font-size: 22px; }
-#stage.tall .tb.pause { top: 745px; width: 90px; height: 56px; font-size: 22px; }
+#stage.tall .tb.pause { top: calc(720px * var(--vz, 1) + 22px); width: 90px; height: 56px; font-size: 22px; }
 .tb.pause { right: 50%; transform: translateX(50%); top: 150px; bottom: auto; width: 64px; height: 44px; border-radius: 10px; font-size: 18px; }
 </style>
 </head>
 <body>
 
 <div id="stage">
+    <div id="view">
     <canvas id="gameCanvas" width="1280" height="720"></canvas>
-    <div id="deck"><div class="deck-logo">THE WARRIORS</div></div>
 
     <!-- HUD -->
     <div class="ui-layer hidden" id="hud">
@@ -239,6 +248,8 @@ kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px soli
     </div>
 
     <div id="banner"><div class="main" id="banner-main"></div><div class="sub" id="banner-sub"></div></div>
+    </div>
+    <div id="deck"><div class="deck-logo">THE WARRIORS</div></div>
 
     <!-- Touch controls (shown on touch devices only) -->
     <div id="touch" class="hidden">
@@ -586,7 +597,7 @@ const G = {
     round: 1, wins: [0, 0], timer: 99, timerF: 0, phaseT: 0,
     final: false, stage: 'neon', roundWinner: null,
     freeze: 0, freezeBy: null, hitStop: 0, shake: 0, slow: 0,
-    zoom: 1, zoomTarget: 1, zx: 640, zy: 400,
+    zoom: 1, zoomTarget: 1, zx: 640, zy: 400, camZ: 1, camX: 640,
     flash: 0, flashColor: '#ffffff', paused: false, frame: 0
 };
 let player1 = null, player2 = null;
@@ -605,10 +616,10 @@ let isTouch = window.matchMedia('(pointer: coarse)').matches || ('ontouchstart' 
 let fitTimer = null;
 function fit() {
     const vw = Math.max(1, window.innerWidth), vh = Math.max(1, window.innerHeight), ar = vw / vh;
-    let sw, sh;
+    let sw, sh, vz = 1;
     const DECK = 480; // room the portrait touch controls need under the arena
     if (H * ar >= W_MIN) { sw = clamp(Math.round(H * ar), W_MIN, W_MAX); sh = H; }           // landscape: fill the width
-    else if (isTouch && ar <= 0.65) { sw = 810; sh = 1440; }                                 // upright phone: fixed 9:16 frame
+    else if (isTouch && ar <= 0.65) { sw = 648; sh = 1440; vz = 1.25; }                      // upright phone: 9:16 frame, arena drawn 25% larger
     else if (isTouch && W_MIN / ar - H >= DECK) { sw = W_MIN; sh = Math.min(2400, Math.round(W_MIN / ar)); } // upright tablet
     else { sw = W_MIN; sh = H; }                                                            // near-square: fit, small bars
     if (sw !== W) {
@@ -618,17 +629,20 @@ function fit() {
         if (player1) { player1.x = clamp(player1.x, LEFT, RIGHT); if (!player2.isHorde) player2.x = clamp(player2.x, LEFT, RIGHT); }
     }
     SH = sh;
+    const stageW = Math.round(W * vz);
     const stage = $('stage');
-    stage.style.setProperty('--sw', W + 'px');
+    stage.style.setProperty('--sw', stageW + 'px');
+    stage.style.setProperty('--aw', W + 'px');
+    stage.style.setProperty('--vz', vz);
     stage.style.setProperty('--sh', SH + 'px');
-    stage.style.setProperty('--s', Math.min(vw / W, vh / SH));
-    const tall = SH > H;
+    stage.style.setProperty('--s', Math.min(vw / stageW, vh / SH));
+    const tall = SH > H * vz;
     stage.classList.toggle('tall', tall);
-    stage.style.setProperty('--cell', Math.min(142, Math.floor((W - 60) / 6)) + 'px'); // portrait touch button grid
+    stage.style.setProperty('--cell', Math.min(142, Math.floor((stageW - 60) / 6)) + 'px'); // portrait touch button grid
     // menus are designed for 1240x720 (landscape) or reflow to ~720x1350 on tall stages
-    const k = tall ? Math.min(1.5, W / 720, SH / 1350) : Math.min(1, W / 1240, SH / 720);
+    const k = tall ? Math.min(1.5, stageW / 720, SH / 1350) : Math.min(1, stageW / 1240, SH / 720);
     stage.style.setProperty('--k', k);
-    stage.style.setProperty('--ow', (W / k) + 'px');
+    stage.style.setProperty('--ow', (stageW / k) + 'px');
     stage.style.setProperty('--oh', (SH / k) + 'px');
     $('rotate-hint').style.display = (isTouch && vh > vw) ? 'block' : 'none';
 }
@@ -1840,7 +1854,7 @@ function startLevel(L) {
     player1 = new Fighter(G.p1Arch, 0, { gear: loadout(G.p1Arch) });
     if (L >= ZOMBIE_START) {
         player2 = new Horde(L);
-        setupMatchHUD(`LV ${L} ZOMBIES`);
+        setupMatchHUD('ZOMBIES');
         startRound();
         return;
     }
@@ -1849,7 +1863,7 @@ function startLevel(L) {
         name: (boss ? 'SHADOW ' : '') + ARCH[p2Arch].name,
         hp: G.ai.hp, dmg: G.ai.dmg, speed: G.ai.speed
     });
-    setupMatchHUD(`LV ${L} ${player2.name}`);
+    setupMatchHUD(player2.name); // the level number is shown under the timer
     startRound();
 }
 
@@ -2227,7 +2241,7 @@ function updateHUD(force) {
     });
     setClass('tb-super', 'ready', player1.super >= 100);
     if (player2.isHorde) {
-        const nm = `LV ${G.level} ZOMBIES ×${player2.total - player2.killed}`;
+        const nm = `ZOMBIES ×${player2.total - player2.killed}`;
         if (hudCache.p2n !== nm) { hudCache.p2n = nm; $('p2-name').textContent = nm; }
     }
     const t = String(G.timer);
@@ -2243,6 +2257,7 @@ function simStep() {
     tickWeather();
     if (G.flash > 0) G.flash = Math.max(0, G.flash - 0.05);
     G.zoom += (G.zoomTarget - G.zoom) * 0.08;
+    updateCamera();
     if (G.shake > 0) { G.shake *= 0.86; if (G.shake < 0.5) G.shake = 0; }
     if (!player1) return;
     if (G.hitStop > 0) { G.hitStop--; return; }
@@ -2265,6 +2280,24 @@ function simStep() {
     updateHUD();
 }
 
+/* Fight camera: zooms in (up to 1.3x) when the action is close, pulls back to keep
+ * everyone on screen, and never shows past the arena edges. The ground stays put. */
+function updateCamera() {
+    let targetZ = 1, cx = W / 2;
+    if (player1 && G.phase !== 'menu') {
+        let lo = player1.x, hi = player1.x;
+        const add = x => { lo = Math.min(lo, x); hi = Math.max(hi, x); };
+        if (player2.isHorde) { for (const z of player2.zombies) if (z.state !== 'dead') add(z.x); }
+        else add(player2.x);
+        targetZ = clamp((W * 0.85) / (hi - lo + 300), 1, 1.3);
+        cx = (lo + hi) / 2;
+    }
+    G.camZ += (targetZ - G.camZ) * 0.04;
+    G.camX += (cx - G.camX) * 0.08;
+    const half = W / (2 * G.camZ);
+    G.camX = clamp(G.camX, half, W - half);
+}
+
 /* =========================================================
  * Rendering
  * ========================================================= */
@@ -2272,7 +2305,8 @@ function render() {
     ctx.save();
     const sx = G.shake ? (Math.random() - 0.5) * G.shake : 0;
     const sy = G.shake ? (Math.random() - 0.5) * G.shake : 0;
-    ctx.translate(G.zx, G.zy); ctx.scale(G.zoom, G.zoom); ctx.translate(-G.zx + sx, -G.zy + sy);
+    ctx.translate(W / 2, GROUND_Y); ctx.scale(G.camZ, G.camZ); ctx.translate(-G.camX, -GROUND_Y); // fight camera
+    ctx.translate(G.zx, G.zy); ctx.scale(G.zoom, G.zoom); ctx.translate(-G.zx + sx, -G.zy + sy);   // K.O. zoom
 
     const camX = player1 ? (player1.x + player2.x) / 2 - W / 2 : Math.sin(G.frame * 0.004) * 200;
     drawStageBack(camX);
