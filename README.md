@@ -1,8 +1,12 @@
-# The Warriors – Arcade Fighter
+# Brawltop – Free Rooftop Fighting Game
 
-A best-of-3 rooftop arcade fighter in a single HTML file. No build step and no dependencies.
+**[▶ Play Brawltop in your browser](https://slickboy414-prog.github.io/The-warriors/)** – free, no download, works on PC, phone and tablet.
 
-**Play:** open `index.html` in a browser, or host it with GitHub Pages.
+![Brawltop: two fighters clash on a neon rooftop at night](media/brawltop-share.png)
+
+Brawltop is a free arcade fighting game built in a single HTML5 file. Fight best-of-3 battles on neon city rooftops as **Pyro**, **Valkyrie** or the unlockable **Titan**. Clear 50 levels against a CPU that plays at human level, survive zombie hordes, earn coins for daily missions and spend them on new weapons and outfits. It also runs as a YouTube Playable.
+
+**Features:** single-player Levels mode (1–50), VS CPU, local 2-player, Supers and Rage mode, signature finishers, a 30-second tutorial, daily missions with streaks, a coin shop, touch controls, and a layout that fits any screen (9:16 on upright phones).
 
 ## Controls (PC)
 

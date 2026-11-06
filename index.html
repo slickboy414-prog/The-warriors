@@ -3,7 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>THE WARRIORS - Arcade Fighter</title>
+<title>Brawltop – Free Rooftop Fighting Game in Your Browser</title>
+<meta name="description" content="Free arcade fighting game for browser and mobile. Battle on neon rooftops as Pyro, Valkyrie or Titan, beat 50 levels and zombie hordes, and unlock gear.">
+<link rel="canonical" href="https://slickboy414-prog.github.io/The-warriors/">
+<meta name="theme-color" content="#0a0614">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Brawltop">
+<meta property="og:title" content="Brawltop – Free Rooftop Fighting Game">
+<meta property="og:description" content="Free arcade fighting game for browser and mobile. Battle on neon rooftops as Pyro, Valkyrie or Titan, beat 50 levels and zombie hordes, and unlock gear.">
+<meta property="og:url" content="https://slickboy414-prog.github.io/The-warriors/">
+<meta property="og:image" content="https://slickboy414-prog.github.io/The-warriors/media/brawltop-share.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Brawltop: two fighters clash on a neon rooftop at night">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Brawltop – Free Rooftop Fighting Game">
+<meta name="twitter:description" content="Free arcade fighting game for browser and mobile. Battle on neon rooftops as Pyro, Valkyrie or Titan, beat 50 levels and zombie hordes, and unlock gear.">
+<meta name="twitter:image" content="https://slickboy414-prog.github.io/The-warriors/media/brawltop-share.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "Brawltop", "url": "https://slickboy414-prog.github.io/The-warriors/", "image": "https://slickboy414-prog.github.io/The-warriors/media/brawltop-share.png", "description": "Free arcade fighting game for browser and mobile. Battle on neon rooftops as Pyro, Valkyrie or Titan, beat 50 levels and zombie hordes, and unlock gear.", "genre": ["Fighting", "Arcade", "Beat 'em up"], "gamePlatform": ["Web browser", "Android", "iOS", "Windows", "macOS"], "applicationCategory": "Game", "operatingSystem": "Any", "playMode": ["SinglePlayer", "MultiPlayer"], "numberOfPlayers": {"@type": "QuantitativeValue", "minValue": 1, "maxValue": 2}, "inLanguage": "en", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "slickboy414-prog"}}</script>
 <!-- YouTube Playables SDK: must load before any game code -->
 <script src="https://www.youtube.com/game_api/v1"></script>
 <style>
@@ -74,7 +91,7 @@ body { font-family: 'Impact', 'Arial Black', sans-serif; color: #fff; }
 
 /* ---------- Menus ---------- */
 .overlay-screen { position: absolute; left: 0; top: 0; width: var(--ow, 100%); height: var(--oh, 100%); transform: scale(var(--k, 1)); transform-origin: 0 0; background: rgba(5,5,10,.78); display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: auto; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 10; }
-.title-text { font-size: 76px; background: linear-gradient(180deg, #fff 20%, #ff0055 80%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 22px rgba(255,0,85,.7)); letter-spacing: 6px; margin-bottom: 6px; }
+.title-text { font-weight: normal; font-size: 76px; background: linear-gradient(180deg, #fff 20%, #ff0055 80%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 22px rgba(255,0,85,.7)); letter-spacing: 6px; margin-bottom: 6px; }
 .sub-title { font-family: Arial, sans-serif; font-size: 14px; color: #999; letter-spacing: 4px; margin-bottom: 18px; }
 #result-line { font-size: 30px; letter-spacing: 3px; color: #ffcc00; text-shadow: 0 0 14px rgba(255,204,0,.6); margin-bottom: 14px; min-height: 0; }
 .select-grid { display: flex; gap: 30px; margin-bottom: 26px; }
@@ -274,6 +291,7 @@ kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px soli
 </head>
 <body>
 
+<noscript><p style="color:#fff;font-family:Arial,sans-serif;padding:20px">Brawltop is a free rooftop fighting game. Turn on JavaScript to play.</p></noscript>
 <div id="stage">
     <div id="view">
     <canvas id="gameCanvas" width="1280" height="720"></canvas>
@@ -302,7 +320,7 @@ kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px soli
     <div id="banner"><div class="main" id="banner-main"></div><div class="sub" id="banner-sub"></div></div>
     <div id="tut"><div class="tstep" id="tut-step"></div><div class="ttext" id="tut-text"></div></div>
     </div>
-    <div id="deck"><div class="deck-logo">THE WARRIORS</div></div>
+    <div id="deck"><div class="deck-logo">BRAWLTOP</div></div>
 
     <!-- Touch controls (shown on touch devices only) -->
     <div id="touch" class="hidden">
@@ -322,8 +340,8 @@ kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px soli
     <div class="overlay-screen" id="menu-screen">
         <div id="menu-coins" class="coin-pill"><span class="coin"></span><span id="menu-coin-n">0</span></div>
         <div id="rotate-hint">&#8635; TIP: ROTATE YOUR DEVICE FOR A BIGGER ARENA</div>
-        <div class="title-text">THE WARRIORS</div>
-        <div class="sub-title">PURE ARCADE FIGHTER &bull; BEST OF 3</div>
+        <h1 class="title-text">BRAWLTOP</h1>
+        <div class="sub-title">ROOFTOP ARCADE FIGHTER &bull; BEST OF 3</div>
         <div id="result-line" class="hidden"></div>
         <div class="select-grid">
             <div class="char-card selected" id="card-brawler" onclick="selectChar('brawler')">
