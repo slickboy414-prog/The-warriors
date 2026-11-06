@@ -177,7 +177,7 @@ canvas { width: 1280px; height: 720px; display: block; }
 kbd { display: inline-block; min-width: 30px; padding: 2px 8px; border: 1px solid #777; border-bottom-width: 3px; border-radius: 5px; background: #1a1a2a; font-family: monospace; font-size: 16px; color: #fff; }
 .help-tips { font-family: Arial, sans-serif; font-size: 14px; color: #aaa; line-height: 1.7; max-width: 760px; text-align: center; margin-bottom: 18px; }
 .help-tips b { color: #fff; }
-.tb.pause { right: 50%; transform: translateX(50%); top: 108px; bottom: auto; width: 64px; height: 44px; border-radius: 10px; font-size: 18px; }
+.tb.pause { right: 50%; transform: translateX(50%); top: 150px; bottom: auto; width: 64px; height: 44px; border-radius: 10px; font-size: 18px; }
 </style>
 </head>
 <body>
@@ -1521,7 +1521,10 @@ class Horde {
         }
         for (let i = 0; i < live.length; i++) for (let j = i + 1; j < live.length; j++) {
             const a = live[i], b = live[j], d = b.x - a.x;
-            if (Math.abs(d) < 30) { const push = (30 - Math.abs(d)) / 2 * (Math.sign(d) || 1); a.x -= push; b.x += push; }
+            if (Math.abs(d) < 30) {
+                const push = (30 - Math.abs(d)) / 2 * (Math.sign(d) || 1);
+                a.x = clamp(a.x - push, LEFT - 20, RIGHT + 20); b.x = clamp(b.x + push, LEFT - 20, RIGHT + 20);
+            }
         }
         // the horde is "positioned" at the zombie nearest the player
         let near = null;
@@ -1571,8 +1574,10 @@ function separate(a, b) {
  * Projectiles
  * ========================================================= */
 function updateProjectiles() {
-    for (let i = projectiles.length - 1; i >= 0; i--) {
-        const p = projectiles[i];
+    // Projectiles are flagged as dead and removed together at the end, so a clash or hit
+    // can never shift the list while it is being walked.
+    for (const p of projectiles.slice()) {
+        if (p.dead) continue;
         p.x += p.vx; p.t++;
         if (p.kind === 'inferno') {
             if (p.t % 2 === 0) addFx({ type: 'spark', x: p.x - p.vx * 2 + rand(-30, 30), y: GROUND_Y - rand(0, 120), vx: -p.vx * 0.1, vy: rand(-4, -1), r: rand(4, 9), color: Math.random() < 0.5 ? '#ff5500' : '#ffcc00', grav: -0.05, decay: 0.04 });
@@ -1580,27 +1585,20 @@ function updateProjectiles() {
         } else if (p.t % 2 === 0) {
             addFx({ type: 'spark', x: p.x - p.vx, y: p.y + rand(-8, 8), vx: -p.vx * 0.2, vy: rand(-1, 1), r: rand(3, 6), color: p.owner.A.color, grav: 0, decay: 0.07 });
         }
-        // projectile clash
-        let removed = false;
-        for (let j = projectiles.length - 1; j >= 0; j--) {
-            const q = projectiles[j];
-            if (q === p || q.owner === p.owner) continue;
+        // projectile clash: a Super beats a normal blast; equal types cancel out
+        for (const q of projectiles) {
+            if (q === p || q.dead || q.owner === p.owner) continue;
             if (Math.abs(q.x - p.x) < p.r + q.r && Math.abs(q.y - p.y) < p.r + q.r + 40) {
                 hitFX((p.x + q.x) / 2, p.y, true, '#ffffff'); audio.hit(true);
-                const kill = [];
-                if (!p.big || q.big) kill.push(p);
-                if (!q.big || p.big) kill.push(q);
-                projectiles = projectiles.filter(x => !kill.includes(x));
-                removed = kill.includes(p);
-                i = Math.min(i, projectiles.length);
+                if (!p.big || q.big) p.dead = true;
+                if (!q.big || p.big) q.dead = true;
                 break;
             }
         }
-        if (removed) continue;
+        if (p.dead) continue;
         const target = p.owner === player1 ? player2 : player1;
         if (target.isHorde) {
             p.hitZ = p.hitZ || [];
-            let consumed = false;
             for (const z of target.zombies) {
                 if (!z.targetable() || p.hitZ.includes(z)) continue;
                 const zy = p.kind === 'inferno' ? Math.abs((z.y - 70) - p.y) < 110 : Math.abs(p.y - (z.y - 80)) < p.r + 50;
@@ -1608,23 +1606,22 @@ function updateProjectiles() {
                     p.hitZ.push(z);
                     const r = z.takeDamage(p.dmg, p.heavy, { facing: Math.sign(p.vx), A: p.owner.A, dmgMult: p.owner.dmgMult, x: p.x }, { launch: p.launch });
                     p.owner.onLanded(r, p.big ? 0 : 6, z);
-                    if (!p.big) { consumed = true; break; }
+                    if (!p.big) { p.dead = true; break; }
                 }
             }
-            if (consumed || p.x < -80 || p.x > W + 80) projectiles.splice(projectiles.indexOf(p), 1);
-            continue;
+        } else {
+            const hitY = p.kind === 'inferno' ? Math.abs((target.y - 70) - p.y) < 110 : Math.abs(p.y - (target.y - 80)) < p.r + 50;
+            if (!target.isDead && Math.abs(p.x - target.x) < p.r + 25 && hitY) {
+                const pseudo = { facing: Math.sign(p.vx), A: p.owner.A, dmgMult: p.owner.dmgMult };
+                const r = target.takeDamage(p.dmg, p.heavy, pseudo, { launch: p.launch, fromSuper: p.big });
+                p.owner.onLanded(r, p.big ? 0 : 6, target);
+                if (p.big) { for (let k = 0; k < 3; k++) ring(target.x, target.y - 80, '#ffcc00', 20 + k * 20, 9, 8, 0.04); sparks(target.x, target.y - 80, '#ff5500', 30, 18); }
+                p.dead = true;
+            }
         }
-        const hitY = p.kind === 'inferno' ? Math.abs((target.y - 70) - p.y) < 110 : Math.abs(p.y - (target.y - 80)) < p.r + 50;
-        if (!target.isDead && Math.abs(p.x - target.x) < p.r + 25 && hitY) {
-            const pseudo = { facing: Math.sign(p.vx), A: p.owner.A, dmgMult: p.owner.dmgMult };
-            const r = target.takeDamage(p.dmg, p.heavy, pseudo, { launch: p.launch, fromSuper: p.big });
-            p.owner.onLanded(r, p.big ? 0 : 6, target);
-            if (p.big) { for (let k = 0; k < 3; k++) ring(target.x, target.y - 80, '#ffcc00', 20 + k * 20, 9, 8, 0.04); sparks(target.x, target.y - 80, '#ff5500', 30, 18); }
-            projectiles.splice(projectiles.indexOf(p), 1);
-            continue;
-        }
-        if (p.x < -80 || p.x > W + 80) projectiles.splice(projectiles.indexOf(p), 1);
+        if (p.x < -80 || p.x > W + 80) p.dead = true;
     }
+    projectiles = projectiles.filter(p => !p.dead);
 }
 function drawProjectiles() {
     for (const p of projectiles) {
@@ -1890,6 +1887,7 @@ function showMenu() {
 }
 function quitToMenu() {
     const lv = G.mode === 'levels';
+    saveProgress(); // keep coins earned before quitting (e.g. zombie kills)
     G.roundWinner = null; setPaused(false); showMenu();
     player1 = player2 = null; projectiles = []; fx = []; G.stage = 'neon';
     if (lv) openLevels();
@@ -2290,11 +2288,16 @@ function initPlayables() {
     try {
         audio.setEnabled(YT.system.isAudioEnabled());
         YT.system.onAudioEnabledChange(on => audio.setEnabled(on));
-        YT.system.onPause(() => setPaused(true));
-        YT.system.onResume(() => { /* keep the pause screen up so the player resumes when ready */ });
+        YT.system.onPause(systemPause);
+        YT.system.onResume(() => { if (!G.paused) audio.resume(); /* in a match the pause screen stays up until the player resumes */ });
     } catch (e) { console.warn('Playables SDK init failed', e); }
 }
-document.addEventListener('visibilitychange', () => { if (document.hidden && G.phase !== 'menu') setPaused(true); });
+// YouTube/browser pause: freeze a match behind the pause screen; on menus just silence audio
+function systemPause() { if (G.phase !== 'menu') setPaused(true); else audio.suspend(); }
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) systemPause();
+    else if (!G.paused) audio.resume();
+});
 
 setupTouch();
 loadProgress();
